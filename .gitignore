@@ -1,0 +1,4 @@
+*.hex
+php_scx/*.yaml
+.idea
+save/

@@ -1,0 +1,235 @@
+### Barracks
+long-swordsman: {
+  display: Long Sword,
+  id: 77,
+  wood: 0,
+  food: 60,
+  gold: 20,
+  type: [infantry, melee]
+}
+pikeman: {
+  display: Pikeman,
+  id: 358,
+  wood: 25,
+  food: 35,
+  gold: 0,
+  type: [infantry, melee]
+}
+
+### Archery Range
+crossbowman: {
+  display: Crossbow,
+  id: 24,
+  wood: 25,
+  food: 0,
+  gold: 45,
+  type: [archer, ranged]
+}
+elite-skirmisher: {
+  display: Elite Skirmisher,
+  id: 6,
+  wood: 35,
+  food: 25,
+  gold: 0,
+  type: [archer, ranged]
+}
+cavalry-archer: {
+  display: Cavalry Archer,
+  id: 39,
+  wood: 40,
+  food: 0,
+  gold: 60,
+  type: [cavalry, archer, ranged]
+}
+
+### Stables
+knight: {
+  display: Knight,
+  id: 38,
+  wood: 0,
+  food: 60,
+  gold: 75,
+  type: [cavalry, melee]
+}
+light-cavalry: {
+  display: Light Cavalry,
+  id: 546,
+  wood: 0,
+  food: 80,
+  gold: 0,
+  type: [cavalry, melee]
+}
+
+### Unique Units
+berserk: {
+  display: Berserk,
+  id: 692,
+  wood: 0,
+  food: 65,
+  gold: 25,
+  type: [infantry, melee, unique]
+}
+cataphract: {
+  display: Cataphract,
+  id: 40,
+  wood: 0,
+  food: 70,
+  gold: 75,
+  type: [cavalry, melee, unique]
+}
+chu-ko-nu: {
+  display: Chu Ko Nu,
+  id: 73,
+  wood: 40,
+  food: 0,
+  gold: 35,
+  type: [archer, ranged, unique]
+}
+huskarl: {
+  display: Huskarl,
+  id: 41,
+  wood: 0,
+  food: 200,
+  gold: 75,
+  type: [infantry, melee, unique]
+}
+janissary: {
+  display: Janissary,
+  id: 46,
+  wood: 0,
+  food: 60,
+  gold: 55,
+  type: [gunpowder, ranged, unique]
+}
+longbowman: {
+  display: Longbowman,
+  id: 8,
+  wood: 35,
+  food: 0,
+  gold: 40,
+  type: [archer, ranged, unique]
+}
+mameluke: {
+  display: Mameluke,
+  id: 282,
+  wood: 0,
+  food: 55,
+  gold: 85,
+  type: [cavalry, ranged, unique]
+}
+mangudai: {
+  display: Mangudai,
+  id: 11,
+  wood: 55,
+  food: 0,
+  gold: 65,
+  type: [cavalry, archer, ranged, unique]
+}
+samurai: {
+  display: Samurai,
+  id: 291,
+  wood: 0,
+  food: 60,
+  gold: 30,
+  type: [infantry, melee, unique]
+}
+teutonic-knight: {
+  display: Teutonic Knight,
+  id: 25,
+  wood: 0,
+  food: 85,
+  gold: 40,
+  type: [infantry, melee, unique]
+}
+throwing-axeman: {
+  display: Throwing Axeman,
+  id: 281,
+  wood: 0,
+  food: 55,
+  gold: 25,
+  type: [infantry, ranged, unique]
+}
+war-elephant: {
+  display: War Elephant,
+  id: 239,
+  wood: 0,
+  food: 70,
+  gold: 75,
+  type: [cavalry, melee, unique]
+}
+woad-raider: {
+  display: Woad Raider,
+  id: 232,
+  wood: 0,
+  food: 65,
+  gold: 25,
+  type: [infantry, melee, unique]
+}
+
+### Siege Workshop
+mangonel: {
+  display: Mangonel,
+  id: 280,
+  wood: 160,
+  food: 0,
+  gold: 135,
+  type: [siege, ranged]
+}
+scorpion: {
+  display: Scorpion,
+  id: 279,
+  wood: 75,
+  food: 0,
+  gold: 75,
+  type: [siege, ranged]
+}
+battering-ram: {
+  display: Battering Ram,
+  id: -1,
+  wood: 160,
+  food: 0,
+  gold: 75,
+  type: [siege]
+}
+
+### Technology
+fletching: {
+  display: Fletching,
+  id: -1,
+  wood: 0,
+  food: 100,
+  gold: 50,
+  type: [tech]
+}
+forging: {
+  display: Forging,
+  id: -1,
+  wood: 0,
+  food: 150,
+  gold: 0,
+  type: [tech]
+}
+padded-archer-armor: {
+  display: Padded Archer Armor,
+  id: -1,
+  wood: 0,
+  food: 100,
+  gold: 0,
+  type: [tech]
+}
+scale-mail: {
+  display: Scale Mail,
+  id: -1,
+  wood: 0,
+  food: 100,
+  gold: 0,
+  type: [tech]
+}
+scale-barding: {
+  display: Scale Barding,
+  id: -1,
+  wood: 0,
+  food: 150,
+  gold: 0,
+  type: [tech]
+}

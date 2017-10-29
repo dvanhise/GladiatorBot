@@ -1,0 +1,25 @@
+---
+name: archerbot
+display: Archer Bot(pew pew)
+like: 'archer'
+dislike: 'infantry'
+---
+name: siegebot
+display: SiegeBot9000
+like: 'siege'
+dislike: ''
+---
+name: cavalrybot
+display: I <3 Ponies
+like: 'cavalry'
+dislike: 'siege, infantry, archer'
+---
+name: meleebot
+display: If we stab them enough we win, right?
+like: 'melee'
+dislike: 'ranged'
+---
+name: techbot
+display: TechnoMagic
+like: 'tech'
+dislike: ''
