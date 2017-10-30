@@ -11,8 +11,8 @@
 
 # --- Compiler configuration --- #
 
-SCX::$scenarios_path = "E:\\steam\\steamapps\\common\\Age2HD\\resources\\_common\\scenario\\";
-SCX::$input_scenario = 'basetest.scx';
+SCX::$scenarios_path = "E:\\steam\\steamapps\\common\\Age2HD\\resources\\_common\\scenario\\";   # TODO: Get scenario path from settings file or something
+SCX::$input_scenario = 'safe14.scx';
 SCX::$output_name = 'outputmap.scx';
 SCX::$hide_triggers = false; # Hide triggers names
 SCX::$resized_format = false; # Resized format will compress the scenario as much as possible for smaller file size

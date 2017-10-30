@@ -2,3 +2,5 @@
 php_scx/*.yaml
 .idea
 save/
+__pycache__
+Triggers.inc
