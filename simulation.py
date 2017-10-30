@@ -1,6 +1,6 @@
 from itertools import combinations
 from settings import UNIT_DATA
-import yaml
+
 import subprocess
 
 
@@ -28,13 +28,23 @@ class Simulation(object):
     # Run battle with existing script file and return results.
     #   results are hitpoints remaining on all winning side units, number is negative if away team won
     def runBattle(self, home, away):
-        # Create yaml files for the php scenario generator to use
-        with open('./php_scx/home.yaml', 'w') as outfile:
-            comp = self.convertToPhpScxName(home.getUnitComp())
-            yaml.dump(comp, outfile, default_flow_style=False)
-        with open('./php_scx/away.yaml', 'w') as outfile:
-            comp = self.convertToPhpScxName(away.getUnitComp())
-            yaml.dump(comp, outfile, default_flow_style=False)
+        homeCoords = [25, 25]
+        awayCoords = [40, 40]
+
+        data = """<?php function Scenario(){
+            SetPlayersCount(2);
+            SetMapSize(50);
+            """
+        data += self.unitCreationString(home.getUnitComp(), 1, homeCoords)
+        data += self.unitCreationString(away.getUnitComp(), 2, awayCoords)
+        data += '\n\nTrig("Attack each other",1,0);'
+        data += '\nCond_Timer(1);'
+        data += self.armyPatrolString(1, homeCoords, awayCoords)
+        data += self.armyPatrolString(2, awayCoords, homeCoords)
+        data += '} ?>'
+
+        with open('./php_scx/Scenario.php', 'w') as outfile:
+            outfile.write(data)
 
         # Generate scenario, needs to be called twice
         subprocess.call('php .\\php_scx\\Compiler.php', shell=True)
@@ -43,8 +53,26 @@ class Simulation(object):
         # Run scenario in AoE2
         return 100
 
-    def convertToPhpScxName(self, comp):
-        newComp = {}
+    def unitCreationString(self, comp, playerNum, coords):
+        str = ''
         for unit, count in comp.items():
-            newComp[('T_' if 'tech' in UNIT_DATA[unit]['type'] else 'U_') + unit.upper().replace('-', '_')] = count
-        return newComp
+            unitData = UNIT_DATA[unit]
+
+            if 'tech' in unitData['type']:
+                str += '\nEfft_Research(%d, %d);' % (playerNum, unitData['id'])
+            else:
+                for i in range(count):
+                    str += '\nNewObject(%d, %d, [%d, %d], 0);' % (playerNum, unitData['id'], coords[0], coords[1])
+
+        return str
+
+    def armyPatrolString(self, playerNum, coords, enemyCoords):
+        return '\nEfft_PatrolO(%d, [[%d, %d],[%d, %d]], [%d, %d]);' % (
+            playerNum,
+            coords[0]+5,
+            coords[1]+5,
+            coords[0]-5,
+            coords[1]-5,
+            enemyCoords[0],
+            enemyCoords[1]
+        )

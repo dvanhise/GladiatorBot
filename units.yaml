@@ -185,7 +185,7 @@ scorpion: {
 }
 battering-ram: {
   display: Battering Ram,
-  id: -1,
+  id: 162,
   wood: 160,
   food: 0,
   gold: 75,
@@ -195,7 +195,7 @@ battering-ram: {
 ### Technology
 fletching: {
   display: Fletching,
-  id: -1,
+  id: 199,
   wood: 0,
   food: 100,
   gold: 50,
@@ -203,7 +203,7 @@ fletching: {
 }
 forging: {
   display: Forging,
-  id: -1,
+  id: 67,
   wood: 0,
   food: 150,
   gold: 0,
@@ -211,7 +211,7 @@ forging: {
 }
 padded-archer-armor: {
   display: Padded Archer Armor,
-  id: -1,
+  id: 211,
   wood: 0,
   food: 100,
   gold: 0,
@@ -219,7 +219,7 @@ padded-archer-armor: {
 }
 scale-mail: {
   display: Scale Mail,
-  id: -1,
+  id: 74,
   wood: 0,
   food: 100,
   gold: 0,
@@ -227,7 +227,7 @@ scale-mail: {
 }
 scale-barding: {
   display: Scale Barding,
-  id: -1,
+  id: 81,
   wood: 0,
   food: 150,
   gold: 0,

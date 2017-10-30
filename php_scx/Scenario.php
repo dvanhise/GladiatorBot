@@ -1,36 +1,102 @@
-<?php
+<?php function Scenario(){
+            SetPlayersCount(2);
+            SetMapSize(50);
+            
+Efft_Research(1, 74);
+NewObject(1, 25, [25, 25], 0);
+NewObject(1, 77, [25, 25], 0);
+Efft_Research(1, 199);
+NewObject(1, 38, [25, 25], 0);
+NewObject(1, 8, [25, 25], 0);
+NewObject(1, 8, [25, 25], 0);
+NewObject(1, 46, [25, 25], 0);
+NewObject(1, 282, [25, 25], 0);
+NewObject(1, 73, [25, 25], 0);
+NewObject(1, 73, [25, 25], 0);
+NewObject(1, 73, [25, 25], 0);
+NewObject(1, 73, [25, 25], 0);
+NewObject(1, 279, [25, 25], 0);
+NewObject(1, 279, [25, 25], 0);
+NewObject(1, 546, [25, 25], 0);
+Efft_Research(1, 81);
+NewObject(1, 41, [25, 25], 0);
+NewObject(1, 281, [25, 25], 0);
+NewObject(1, 239, [25, 25], 0);
+NewObject(1, 232, [25, 25], 0);
+NewObject(1, 291, [25, 25], 0);
+NewObject(1, 6, [25, 25], 0);
+NewObject(1, 6, [25, 25], 0);
+NewObject(1, 6, [25, 25], 0);
+NewObject(1, 6, [25, 25], 0);
+NewObject(1, 692, [25, 25], 0);
+NewObject(1, 162, [25, 25], 0);
+NewObject(1, 11, [25, 25], 0);
+NewObject(1, 11, [25, 25], 0);
+NewObject(1, 11, [25, 25], 0);
+NewObject(1, 280, [25, 25], 0);
+NewObject(1, 280, [25, 25], 0);
+Efft_Research(1, 211);
+NewObject(1, 358, [25, 25], 0);
+NewObject(1, 358, [25, 25], 0);
+NewObject(1, 358, [25, 25], 0);
+NewObject(1, 39, [25, 25], 0);
+NewObject(1, 39, [25, 25], 0);
+NewObject(1, 39, [25, 25], 0);
+NewObject(1, 39, [25, 25], 0);
+Efft_Research(1, 67);
+NewObject(1, 24, [25, 25], 0);
+NewObject(1, 24, [25, 25], 0);
+NewObject(1, 24, [25, 25], 0);
+NewObject(1, 24, [25, 25], 0);
+Efft_Research(2, 74);
+NewObject(2, 25, [40, 40], 0);
+NewObject(2, 77, [40, 40], 0);
+Efft_Research(2, 199);
+NewObject(2, 38, [40, 40], 0);
+NewObject(2, 8, [40, 40], 0);
+NewObject(2, 8, [40, 40], 0);
+NewObject(2, 46, [40, 40], 0);
+NewObject(2, 46, [40, 40], 0);
+NewObject(2, 282, [40, 40], 0);
+NewObject(2, 73, [40, 40], 0);
+NewObject(2, 73, [40, 40], 0);
+NewObject(2, 279, [40, 40], 0);
+NewObject(2, 279, [40, 40], 0);
+NewObject(2, 279, [40, 40], 0);
+NewObject(2, 279, [40, 40], 0);
+NewObject(2, 546, [40, 40], 0);
+NewObject(2, 546, [40, 40], 0);
+Efft_Research(2, 81);
+NewObject(2, 281, [40, 40], 0);
+NewObject(2, 239, [40, 40], 0);
+NewObject(2, 232, [40, 40], 0);
+NewObject(2, 291, [40, 40], 0);
+NewObject(2, 6, [40, 40], 0);
+NewObject(2, 6, [40, 40], 0);
+NewObject(2, 6, [40, 40], 0);
+NewObject(2, 6, [40, 40], 0);
+NewObject(2, 692, [40, 40], 0);
+NewObject(2, 162, [40, 40], 0);
+NewObject(2, 11, [40, 40], 0);
+NewObject(2, 280, [40, 40], 0);
+Efft_Research(2, 211);
+NewObject(2, 358, [40, 40], 0);
+NewObject(2, 358, [40, 40], 0);
+NewObject(2, 358, [40, 40], 0);
+NewObject(2, 358, [40, 40], 0);
+NewObject(2, 39, [40, 40], 0);
+NewObject(2, 39, [40, 40], 0);
+NewObject(2, 39, [40, 40], 0);
+NewObject(2, 39, [40, 40], 0);
+Efft_Research(2, 67);
+NewObject(2, 24, [40, 40], 0);
+NewObject(2, 24, [40, 40], 0);
+NewObject(2, 24, [40, 40], 0);
+NewObject(2, 24, [40, 40], 0);
+NewObject(2, 24, [40, 40], 0);
+NewObject(2, 24, [40, 40], 0);
 
-function Scenario(){
-    SetPlayersCount(2);
-    SetMapSize(50);
-
-    /*SetPlayersCount(2);
-    SetMapSize(50);
-
-    $homeCompFile = fopen('./home.yaml', 'r');
-    $awayCompFile = fopen('./away.yaml', 'r');
-
-    $homeComp = yaml_parse(fread($homeCompFile));
-    $awayComp = yaml_parse(fread($awayCompFile));
-
-    foreach($homeComp as $name => $count) {
-        if (substr($name, 0, 1 ) === "U") {
-            NewObject(1, eval($name), [20, 30], 0);
-        } else {
-            Efft_Research(1, eval($name));
-        }
-    }
-
-    foreach($awayComp as $name => $count) {
-        if (substr($name, 0, 1 ) === "U") {
-            NewObject(2, eval($name), [30, 20], 0);
-        } else {
-            Efft_Research(2, eval($name));
-        }
-    }*/
-}
-
-?>
-
-
-
+Trig("Attack each other",1,0);
+Cond_Timer(1);
+Efft_PatrolO(1, [[30, 30],[20, 20]], [40, 40]);
+Efft_PatrolO(2, [[45, 45],[35, 35]], [25, 25]);} ?>
