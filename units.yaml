@@ -167,14 +167,14 @@ woad-raider: {
 }
 
 ### Siege Workshop
-mangonel: {
-  display: Mangonel,
-  id: 280,
-  wood: 160,
-  food: 0,
-  gold: 135,
-  type: [siege, ranged]
-}
+#mangonel: {
+#  display: Mangonel,
+#  id: 280,
+#  wood: 160,
+#  food: 0,
+#  gold: 135,
+#  type: [siege, ranged]
+#}
 scorpion: {
   display: Scorpion,
   id: 279,

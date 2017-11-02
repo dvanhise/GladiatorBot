@@ -11,9 +11,9 @@
 
 # --- Compiler configuration --- #
 
-SCX::$scenarios_path = "E:\\steam\\steamapps\\common\\Age2HD\\resources\\_common\\scenario\\";   # TODO: Get scenario path from settings file or something
-SCX::$input_scenario = 'safe14.scx';
-SCX::$output_name = 'outputmap.scx';
+SCX::$scenarios_path = "E:\\jdownloads\\historytourpics\\historytourpics\\Microsoft Games\\Age of Empires II\\Games\\Forgotten Empires\\Scenario";   # TODO: Get scenario path from settings file or something
+SCX::$input_scenario = '.\\php_scx\\arenabase.scx';
+SCX::$output_name = 'aaa-outputmap.scx';
 SCX::$hide_triggers = false; # Hide triggers names
 SCX::$resized_format = false; # Resized format will compress the scenario as much as possible for smaller file size
 SCX::$triggers_version = 1.6; # 1.6 is version used by aoc, but you can down it to 1.3 for smaller file size, without removing important features
@@ -188,7 +188,7 @@ class SCX {
 
     static function format($module = true){
     
-        $scfile = self::$scenarios_path.'\\'.self::$input_scenario;
+        $scfile = self::$input_scenario;
     	
         $padd = pack('c',0);
     

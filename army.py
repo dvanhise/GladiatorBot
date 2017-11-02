@@ -110,7 +110,6 @@ class Army(object):
                 resources.purchase(unit, 1)
                 armyComp[key] += 1
 
-        print(resources)
         return armyComp
 
     def getGenome(self):
