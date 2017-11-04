@@ -11,7 +11,7 @@
 
 # --- Compiler configuration --- #
 
-SCX::$scenarios_path = "E:\\jdownloads\\historytourpics\\historytourpics\\Microsoft Games\\Age of Empires II\\Games\\Forgotten Empires\\Scenario";   # TODO: Get scenario path from settings file or something
+SCX::$scenarios_path = "E:\\steam\\steamapps\\common\\Age2HD\\resources\\_common\\scenario";
 SCX::$input_scenario = '.\\php_scx\\arenabase.scx';
 SCX::$output_name = 'aaa-outputmap.scx';
 SCX::$hide_triggers = false; # Hide triggers names

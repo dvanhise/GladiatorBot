@@ -17,7 +17,7 @@ class Simulation(object):
 
         # Open AoE2
         # subprocess.call(AOE2_PATH + ' nostartup nomusic', shell=True)
-        subprocess.call(AOE2_PATH, shell=True)
+        # subprocess.call(AOE2_PATH, shell=True)
 
     def runSim(self):
         # TODO: This is full round robin, need a way to have fewer matches, each player plays ~10
@@ -35,8 +35,12 @@ class Simulation(object):
     # Run battle with existing script file and return results.
     #   results are hitpoints remaining on all winning side units, number is negative if away team won
     def runBattle(self, home, away):
-        homeCoords = [11, 11]
-        awayCoords = [23, 23]
+        # Coordinates for arenabase
+        homeCoords = [10, 10]
+        awayCoords = [24, 24]
+        # Coordinates for arenabase2
+        # homeCoords = [20, 7]
+        # awayCoords = [20, 35]
 
         # TODO: Set players as blank AI, no fog of war
         # Create scenario with 2 AI players controlling the home and away armies respectively
@@ -44,7 +48,7 @@ class Simulation(object):
 
             Trig('init');
             SetPlayersCount(2);
-            SetMapSize(34);
+            SetMapSize(40);
             SetAllTech(True);
 
             SetPlayerCiv(1, 'Chinese');
@@ -58,12 +62,10 @@ class Simulation(object):
         data += self.unitCreationString(away.getUnitComp(), 2, awayCoords)
         data += '\n\nTrig("start");'
         data += '\nCond_Timer(1);'
-        data += '\nEfft_Chat(1,"Hello1");'
-        data += '\nEfft_Chat(2,"Hello2");'
         data += self.armyPatrolString(1, homeCoords, awayCoords)
         data += self.armyPatrolString(2, awayCoords, homeCoords)
-        data += '\nEfft_ChangeView(1, [17,17]);'
-        data += '\nEfft_ChangeView(2, [17,17]);'
+        data += '\nEfft_ChangeView(1, [%d,%d]);' % \
+                (int((homeCoords[0] + awayCoords[0])/2), int((homeCoords[1] + awayCoords[1])/2))
         data += '} ?>'
 
         with open('./php_scx/Scenario.php', 'w') as outfile:
@@ -74,19 +76,19 @@ class Simulation(object):
         subprocess.call('php .\\php_scx\\Compiler.php', shell=True)
 
         # Run scenario in AoE2
-        time.sleep(5)
-        print('Starting automated clicking')
-        pyautogui.click(884, 189, button='left')  # Click 'Single Player'
-        pyautogui.click(1477, 302, button='left')  # Click 'Standard Game'
-        pyautogui.click(1852, 117, button='left')  # Click dropdown arrow on game type
-        pyautogui.click(1605, 326, button='left')  # Click "Scenario..."
-        pyautogui.doubleClick(371, 165, button='left')  # Double click first scenario on list
-        # set AI?
-        # Start game
-        while True:
-            im = pyautogui.screenshot()
-            # test it for end of game screen  and player points
-            time.sleep(1)
+        # time.sleep(5)
+        # print('Starting automated clicking')
+        # pyautogui.click(884, 189, button='left')  # Click 'Single Player'
+        # pyautogui.click(1477, 302, button='left')  # Click 'Standard Game'
+        # pyautogui.click(1852, 117, button='left')  # Click dropdown arrow on game type
+        # pyautogui.click(1605, 326, button='left')  # Click "Scenario..."
+        # pyautogui.doubleClick(371, 165, button='left')  # Double click first scenario on list
+        # # set AI?
+        # # Start game
+        # while True:
+        #     im = pyautogui.screenshot()
+        #     # test it for end of game screen  and player points
+        #     time.sleep(1)
         # Click finish
         # Click to main menu
 
@@ -101,24 +103,21 @@ class Simulation(object):
                 strn += '\nEfft_Research(%d, %d);' % (playerNum, unitData['id'])
             else:
                 for i in range(count):
-                    strn += '\nNewObject(%d, %d, [%d, %d], 0, %d);' % (
+                    strn += '\nNewObject(%d, %d, [%d, %d], 0);' % (
                         playerNum,
                         unitData['id'],
-                        coords[0]+randint(-2, 2),
-                        coords[1]+randint(-2, 2),
-                        playerNum+5000
+                        coords[0]+randint(-1, 1),
+                        coords[1]+randint(-1, 1)
                     )
 
         return strn
 
     def armyPatrolString(self, playerNum, coords, enemyCoords):
-        return '\nEfft_PatrolG(%d, %d, [[%d, %d],[%d, %d]], [%d, %d]);' % (
+        return '\nEfft_PatrolO(%d, Area(%d, %d, %d, %d), %s);' % (
             playerNum,
-            5000+playerNum,
-            coords[0]+4,
-            coords[1]+4,
             coords[0]-4,
             coords[1]-4,
-            enemyCoords[0],
-            enemyCoords[1]
+            coords[0]+4,
+            coords[1]+4,
+            enemyCoords
         )

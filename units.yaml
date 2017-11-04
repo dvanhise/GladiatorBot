@@ -167,14 +167,14 @@ woad-raider: {
 }
 
 ### Siege Workshop
-#mangonel: {
-#  display: Mangonel,
-#  id: 280,
-#  wood: 160,
-#  food: 0,
-#  gold: 135,
-#  type: [siege, ranged]
-#}
+mangonel: {
+  display: Mangonel,
+  id: 280,
+  wood: 160,
+  food: 0,
+  gold: 135,
+  type: [siege, ranged]
+}
 scorpion: {
   display: Scorpion,
   id: 279,
@@ -190,6 +190,16 @@ battering-ram: {
   food: 0,
   gold: 75,
   type: [siege]
+}
+
+### Monk
+monk: {
+  display: Monk,
+  id: 125,
+  wood: 0,
+  food: 0,
+  gold: 100,
+  type: [monk]
 }
 
 ### Technology

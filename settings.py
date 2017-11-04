@@ -16,7 +16,7 @@ SAVE_DIR = './save'
 UNIT_DATA_PATH = './units.yaml'
 BOT_DATA_PATH = './bots.yaml'
 
-AOE2_PATH = 'E:/jdownloads/historytourpics/historytourpics/Microsoft Games/Age of Empires II/Age2_x1/age2_x2.exe'
+AOE2_PATH = 'E:/steam/steamapps/common/Age2HD/AoK HD.exe'
 # INPUT_SCENARIO
 
 # Load data files and keep them available

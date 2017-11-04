@@ -30,7 +30,7 @@ class Army(object):
                 for unitName, unitData in UNIT_DATA.items():
                     # Use a beta distribution weighted by bot's likes and dislikes
                     # Magic numbers are magic   (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧
-                    alpha = beta = 1.2
+                    alpha = beta = 1
                     for like in (botData.get('like', []) if botData else []):
                         if like in unitData['type']:
                             alpha += .5
