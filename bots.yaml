@@ -2,7 +2,7 @@
 name: uniquebot
 display: Unique
 like: 'unique'
-dislike: ''
+dislike: 'tech'
 ---
 name: rangedbot
 display: Artillery
@@ -54,33 +54,38 @@ display: BOOMbot
 like: 'gunpowder, gunpowder'
 dislike: 'archer'
 ---
+name: unitbot
+display: More Units
+like: ''
+dislike: 'tech, tech'
+---
 name: bot1
-display: bot1
+display: BotWithAName
 like: ''
 dislike: ''
 ---
 name: bot2
-display: bot2
+display: Steve
 like: ''
 dislike: ''
 ---
 name: bot3
-display: bot3
+display: A Wolf
 like: ''
 dislike: ''
 ---
 name: bot4
-display: bot4
+display: A Bear
 like: ''
 dislike: ''
 ---
 name: bot5
-display: bot5
+display: Snips
 like: ''
 dislike: ''
 ---
 name: bot6
-display: bot6
+display: asdf
 like: ''
 dislike: ''
 ---
@@ -93,9 +98,3 @@ name: bot8
 display: bot8
 like: ''
 dislike: ''
----
-name: bot9
-display: bot9
-like: ''
-dislike: ''
-

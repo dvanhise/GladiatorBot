@@ -57,8 +57,6 @@ file_put_contents(SCX::$scenarios_path.'\\'.SCX::$output_name,SCX::$data_head.gz
 SCX::$microtime = microtime(true)- SCX::$microtime;
 
 # Write Results:
-echo 'Scenario: '.SCX::$output_name;
-
 
 $TriggerId = array_flip(SCX::$TgAr);
 # Echo triggers not found by activate / deactivate effects

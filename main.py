@@ -5,13 +5,6 @@ import os
 import random
 
 
-def getArmyByName(armies, name):
-    for army in armies:
-        if army.name == name:
-            return army
-    raise ValueError
-
-
 def main():
     armies = []
     for bot in BOT_DATA:
@@ -31,12 +24,12 @@ def main():
 
     while True:
         sim.setEntrants(armies)
-        results = sim.runSim()
+        sim.runSim()
 
         # Use results to generate army fitness roulette
         rouletteWheel = []
-        for army, wins in results.items():
-            rouletteWheel += [getArmyByName(armies, army)] * wins
+        for army in armies:
+            rouletteWheel += [army] * army.wins
 
         # Save new army genes to file
         nextGenArmies = [army.makeChild(random.choice(rouletteWheel)) for army in armies]

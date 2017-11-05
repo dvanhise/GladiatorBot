@@ -12,6 +12,8 @@ from settings import MUT_RATE, CROSSOVER_RATE, SAVE_DIR, WOOD, FOOD, GOLD, UNIT_
 class Army(object):
 
     def __init__(self, botData=None, genome=None):
+        self.wins = 0
+        self.losses = 0
         if botData:
             self.name = botData.get('name', 'bot' + str(randint(0, 10**6)))
             self.display = botData.get('display', self.name)
