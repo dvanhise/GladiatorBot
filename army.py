@@ -34,8 +34,8 @@ class Army(object):
                     for like in (botData.get('like', []) if botData else []):
                         if like in unitData['type']:
                             alpha += .5
-                    for like in (botData.get('dislike', []) if botData else []):
-                        if like in unitData['type']:
+                    for dislike in (botData.get('dislike', []) if botData else []):
+                        if dislike in unitData['type']:
                             beta += .5
 
                     self.genome[unitName] = betavariate(alpha=alpha, beta=beta)
@@ -59,15 +59,16 @@ class Army(object):
 
     # Returns dictionary of unit->count from army genome
     def getUnitComp(self):
+        normGenome = self.genome.power(2)
         resources = Resources(WOOD, FOOD, GOLD)
         armyComp = {}
 
-        valueTotal = sum(self.genome.values())
+        valueTotal = sum(normGenome.values())
         totalResources = WOOD + FOOD + GOLD
 
         testResources = Resources(0, 0, 0)
         # Iterate through units to find relative demand for each resource
-        for key, value in self.genome.items():
+        for key, value in normGenome.items():
             unit = UNIT_DATA[key]
             totalUnitCost = unit['wood'] + unit['food'] + unit['gold']
             fairRatio = value/valueTotal
@@ -83,7 +84,7 @@ class Army(object):
 
         remainderTab = {}
         # Based off relative resource demand and fair ratio, purchase units
-        for key, value in self.genome.items():
+        for key, value in normGenome.items():
             fairRatio = value/valueTotal
             unit = UNIT_DATA[key]
             mod = 1.5  # This helps but might cause invalid unit purchases

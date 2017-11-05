@@ -1,39 +1,56 @@
-from settings import UNIT_DATA, AOE2_PATH
-import pyautogui
+from settings import UNIT_DATA
 
+import pyautogui
 import subprocess
 import time
-from random import randint
+import psutil
+from random import shuffle
+from string import Template
 from itertools import combinations
+from more_itertools import chunked
 
 
 class Simulation(object):
 
     def __init__(self):
-        # Open OBS with local config file and start stream
         self.entrants = []
-        self.results = []
+        self.wins = self.losses = []
         pyautogui.PAUSE = .5
 
-        # Open AoE2
-        # subprocess.call(AOE2_PATH + ' nostartup nomusic', shell=True)
-        # subprocess.call(AOE2_PATH, shell=True)
+        # Confirm AoE2 is running, it's the best check I can do
+        if not [1 for pid in psutil.pids() if psutil.Process(pid).name() == "AoK HD.exe"]:
+            raise RuntimeError("AoE2 HD must be running with the arena scenario in a completed state.")
+        # (Hopefully) click within the AoE2 window
+        pyautogui.click(1000, 1000, button='left')
 
     def runSim(self):
-        # TODO: This is full round robin, need a way to have fewer matches, each player plays ~10
-        self.runBattle(self.entrants[0], self.entrants[1])
-        # for home, away in combinations(self.entrants, 2):
-        #     results = self.runBattle(home, away)
-        #     # accumulate results
+        # Create and shuffle full round robin
+        matches = list(combinations(self.entrants, 2))
+        shuffle(matches)
+        for home, away in matches:
+            result = self.runBattle(home, away)
+            if result == -1:
+                print('\n%s defeats %s' % (away.display, home.display))
+                self.losses[home.name] += 1
+                self.wins[away.name] += 1
+            elif result == 1:
+                print('\n%s defeats %s' % (home.display, away.display))
+                self.losses[away.name] += 1
+                self.wins[home.name] += 1
+            else:
+                raise ValueError('Match ended inconclusive, exiting.')
 
-        return {}
+        return self.wins
 
     def setEntrants(self, armies):
         self.entrants = armies
-        self.results = []
+        self.wins = {army.name: 0 for army in self.entrants}
+        self.losses = {army.name: 0 for army in self.entrants}
 
-    # Run battle with existing script file and return results.
-    #   results are hitpoints remaining on all winning side units, number is negative if away team won
+    # Run battle with existing script file and return:
+    #  1 for home team win
+    #  0 for inconclusive result
+    #  -1 for away team win
     def runBattle(self, home, away):
         # Coordinates for arenabase
         homeCoords = [10, 10]
@@ -42,57 +59,59 @@ class Simulation(object):
         # homeCoords = [20, 7]
         # awayCoords = [20, 35]
 
-        # TODO: Set players as blank AI, no fog of war
-        # Create scenario with 2 AI players controlling the home and away armies respectively
-        data = """<?php function Scenario(){
+        homeComp = home.getUnitComp()
+        awayComp = away.getUnitComp()
 
-            Trig('init');
-            SetPlayersCount(2);
-            SetMapSize(40);
-            SetAllTech(True);
+        initialActions = self.armyPatrolString(1, homeCoords, awayCoords) + \
+            self.armyPatrolString(2, awayCoords, homeCoords) + \
+            '\nEfft_ChangeView(1, [%d,%d]);' % (int((homeCoords[0] + awayCoords[0])/2)-1, int((homeCoords[1] + awayCoords[1])/2)) + \
+            self.armyCompChat(1, homeComp) + \
+            self.armyCompChat(2, awayComp)
 
-            SetPlayerCiv(1, 'Chinese');
-            SetPlayerCiv(2, 'Chinese');
-            SetPlayerStartAge(1, 'Castle');
-            SetPlayerStartAge(2, 'Castle');
-            """
-        data += '\nSetPlayerName(1, "%s");' % home.display
-        data += '\nSetPlayerName(2, "%s");' % away.display
-        data += self.unitCreationString(home.getUnitComp(), 1, homeCoords)
-        data += self.unitCreationString(away.getUnitComp(), 2, awayCoords)
-        data += '\n\nTrig("start");'
-        data += '\nCond_Timer(1);'
-        data += self.armyPatrolString(1, homeCoords, awayCoords)
-        data += self.armyPatrolString(2, awayCoords, homeCoords)
-        data += '\nEfft_ChangeView(1, [%d,%d]);' % \
-                (int((homeCoords[0] + awayCoords[0])/2), int((homeCoords[1] + awayCoords[1])/2))
-        data += '} ?>'
+        subDict = {
+            'SetPlayerNames': '\nSetPlayerName(1, "%s");' % home.display + '\nSetPlayerName(2, "%s");' % away.display,
+            'AddUnitsTechs': self.unitCreationString(homeComp, 1, homeCoords) + self.unitCreationString(awayComp, 2, awayCoords),
+            'InitialActions': initialActions
+        }
 
-        with open('./php_scx/Scenario.php', 'w') as outfile:
-            outfile.write(data)
+        with open('./php_scx/ScenarioTemplate.php', 'r') as templateFile:
+            result = Template(templateFile.read()).substitute(subDict)
+            with open('./php_scx/Scenario.php', 'w') as outfile:
+                outfile.write(result)
 
         # Generate scenario, needs to be called twice
         subprocess.call('php .\\php_scx\\Compiler.php', shell=True)
         subprocess.call('php .\\php_scx\\Compiler.php', shell=True)
 
-        # Run scenario in AoE2
-        # time.sleep(5)
-        # print('Starting automated clicking')
-        # pyautogui.click(884, 189, button='left')  # Click 'Single Player'
-        # pyautogui.click(1477, 302, button='left')  # Click 'Standard Game'
-        # pyautogui.click(1852, 117, button='left')  # Click dropdown arrow on game type
-        # pyautogui.click(1605, 326, button='left')  # Click "Scenario..."
-        # pyautogui.doubleClick(371, 165, button='left')  # Double click first scenario on list
-        # # set AI?
-        # # Start game
-        # while True:
-        #     im = pyautogui.screenshot()
-        #     # test it for end of game screen  and player points
-        #     time.sleep(1)
-        # Click finish
-        # Click to main menu
+        # If we don't wait, AoE2 might read scenario before it's done compiling
+        time.sleep(4)
 
-        return 100
+        pyautogui.typewrite(['f10', 'up', 'up', 'enter', 'enter'])  # Open menu and select 'Restart'
+
+        n = 0
+        while n < 40:
+            # Take a screenshot and crop to where the line appears through a player's score when they're eliminated.
+            # Yes, seriously, that's how we're detecting who won and when the match is over.  If the home team is
+            # given artificial point inflation, it will always be on top
+            image = pyautogui.screenshot()
+
+            awayLine = image.crop((1750, 890, 1910, 891)).convert('L')
+            homeLine = image.crop((1750, 870, 1910, 871)).convert('L')
+            if self.imageIsLine(homeLine):
+                return -1
+            elif self.imageIsLine(awayLine):
+                return 1
+
+            time.sleep(3)
+            n += 1
+        return 0
+
+    def imageIsLine(self, im):
+        pixels = [im.getpixel((x, 0)) for x in range(im.width)]
+        for p in pixels:
+            if p != pixels[0]:
+                return False
+        return True
 
     def unitCreationString(self, comp, playerNum, coords):
         strn = ''
@@ -106,8 +125,8 @@ class Simulation(object):
                     strn += '\nNewObject(%d, %d, [%d, %d], 0);' % (
                         playerNum,
                         unitData['id'],
-                        coords[0]+randint(-1, 1),
-                        coords[1]+randint(-1, 1)
+                        coords[0],
+                        coords[1]
                     )
 
         return strn
@@ -121,3 +140,13 @@ class Simulation(object):
             coords[1]+4,
             enemyCoords
         )
+
+    def armyCompChat(self, playerNum, comp):
+        data = ''
+        countList = []
+        for unit, num in sorted(comp.items(), key=lambda x: x[1], reverse=True):
+            if num > 0:
+                countList.append('%d %s' % (num, UNIT_DATA[unit]['display']))
+        for line in list(chunked(countList, 4)):
+            data += '\nEfft_Chat(%d, "%s");' % (playerNum, ' - '.join(line))
+        return data

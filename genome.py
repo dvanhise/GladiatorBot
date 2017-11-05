@@ -13,3 +13,9 @@ class Genome(dict):
     def crossover(self, mate):
         for key in self.keys():
             self[key] = random.choice(self[key], mate[key])
+
+    def power(self, p):
+        g = Genome()
+        for key in self.keys():
+            g[key] = self[key]**p
+        return g

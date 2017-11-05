@@ -13,7 +13,7 @@
 
 SCX::$scenarios_path = "E:\\steam\\steamapps\\common\\Age2HD\\resources\\_common\\scenario";
 SCX::$input_scenario = '.\\php_scx\\arenabase.scx';
-SCX::$output_name = 'aaa-outputmap.scx';
+SCX::$output_name = 'gladBotOutput.scx';
 SCX::$hide_triggers = false; # Hide triggers names
 SCX::$resized_format = false; # Resized format will compress the scenario as much as possible for smaller file size
 SCX::$triggers_version = 1.6; # 1.6 is version used by aoc, but you can down it to 1.3 for smaller file size, without removing important features
@@ -57,21 +57,14 @@ file_put_contents(SCX::$scenarios_path.'\\'.SCX::$output_name,SCX::$data_head.gz
 SCX::$microtime = microtime(true)- SCX::$microtime;
 
 # Write Results:
-echo '<body>';
-echo '<h3>Results:</h3>';
-echo '<p><b>Microtime:</b> '.SCX::$microtime.'</p>';
-echo '<p><b>Scenario:</b> '.SCX::$output_name.'</p>';
-echo '<p><b>Triggers:</b> '.(SCX::$ID_T + 1).'</p>';
-echo '<p><b>Conditions:</b> '.SCX::$C_CT.'</p>';
-echo '<p><b>Effects:</b> '.SCX::$E_CT.'</p>';
-echo '<p><hr></p>';
+echo 'Scenario: '.SCX::$output_name;
+
 
 $TriggerId = array_flip(SCX::$TgAr);
 # Echo triggers not found by activate / deactivate effects
 foreach(SCX::$FK as $Trig => $Fake) echo '<p><b>' . @$TriggerId[$Trig]. '</b> ===>>> ' . $Fake . '</p>';
 # Echo unused triggers (off at start and never activated)
 foreach(SCX::$off_triggers as $TrigName => $Data)if(!isset($Data[1]))echo '<p><b>' . $TrigName . '</b> --->>> Unused !</p>';
-echo '</body>';
 
 # Decompression / Compression of the SCX format
 class SCX {

@@ -1,1 +1,4 @@
 pyautogui
+psutil
+Pillow
+more-itertools

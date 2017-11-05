@@ -1,6 +1,15 @@
 from army import Army
 from simulation import Simulation
-from settings import POP_SIZE, BOT_DATA
+from settings import POP_SIZE, BOT_DATA, SAVE_DIR
+import os
+import random
+
+
+def getArmyByName(armies, name):
+    for army in armies:
+        if army.name == name:
+            return army
+    raise ValueError
 
 
 def main():
@@ -14,21 +23,30 @@ def main():
 
     sim = Simulation()
 
-    # gen = 1
-    # while True:
-    #     sim.setEntrants(armies)
-    #     results = sim.runSim()
-    #
-    #     # Use results to generate army fitness roulette
-    #     # Save new army genes to file
-    #     nextGenArmies = [army.makeChild(armies[5]) for army in armies]
-    #     armies = nextGenArmies
-    #     for army in armies:
-    #         army.save()
-    #     gen += 1
+    try:
+        with open(os.path.join(SAVE_DIR, 'gen.txt'), 'r') as genFile:
+            gen = genFile.read()
+    except FileNotFoundError:
+        gen = 1
 
-    sim.setEntrants(armies)
-    results = sim.runSim()
+    while True:
+        sim.setEntrants(armies)
+        results = sim.runSim()
+
+        # Use results to generate army fitness roulette
+        rouletteWheel = []
+        for army, wins in results.items():
+            rouletteWheel += [getArmyByName(armies, army)] * wins
+
+        # Save new army genes to file
+        nextGenArmies = [army.makeChild(random.choice(rouletteWheel)) for army in armies]
+        armies = nextGenArmies
+        for army in armies:
+            army.save()
+
+        gen += 1
+        with open(os.path.join(SAVE_DIR, 'gen.txt'), 'w') as genFile:
+            genFile.write(gen)
 
 
 if __name__ == "__main__":

@@ -15,8 +15,33 @@ pikeman: {
   gold: 0,
   type: [infantry, melee]
 }
+eagle-warrior: {
+  display: Eagle Warrior,
+  id: 753,
+  wood: 0,
+  food: 20,
+  gold: 50,
+  type: [infantry, melee]
+}
+condottierro: {
+  display: Condottierro,
+  id: 882,
+  wood: 0,
+  food: 50,
+  gold: 35,
+  type: [infantry, melee, unique]
+}
+
 
 ### Archery Range
+cavalry-archer: {
+  display: Cavalry Archer,
+  id: 39,
+  wood: 40,
+  food: 0,
+  gold: 60,
+  type: [cavalry, archer, ranged]
+}
 crossbowman: {
   display: Crossbow,
   id: 24,
@@ -33,16 +58,40 @@ elite-skirmisher: {
   gold: 0,
   type: [archer, ranged]
 }
-cavalry-archer: {
-  display: Cavalry Archer,
-  id: 39,
-  wood: 40,
-  food: 0,
-  gold: 60,
-  type: [cavalry, archer, ranged]
+genitour: {
+  display: Genitour,
+  id: 583,
+  wood: 50,
+  food: 35,
+  gold: 0,
+  type: [cavalry, ranged, unique]
+}
+slinger: {
+  display: Slinger,
+  id: 185,
+  wood: 0,
+  food: 30,
+  gold: 40,
+  type: [ranged, unique]
 }
 
 ### Stables
+#battle-elephant: {
+#  display: Battle Elephant,
+#  id: 1132,
+#  wood: 0,
+#  food: 120,
+#  gold: 70,
+#  type: [cavalry, melee]
+#}
+camel: {
+  display: Camel,
+  id: 329,
+  wood: 0,
+  food: 55,
+  gold: 60,
+  type: [cavalry, melee]
+}
 knight: {
   display: Knight,
   id: 38,
@@ -61,6 +110,22 @@ light-cavalry: {
 }
 
 ### Unique Units
+#arambai: {
+#  display: Arambai,
+#  id: 692,
+#  wood: 50,
+#  food: 0,
+#  gold: 60,
+#  type: [cavalry, ranged, unique]
+#}
+#ballista-elephant: {
+#  display: Ballista Elephant,
+#  id: 692,
+#  wood: 0,
+#  food: 100,
+#  gold: 80,
+#  type: [cavalry, siege, ranged, unique]
+#}
 berserk: {
   display: Berserk,
   id: 692,
@@ -69,6 +134,22 @@ berserk: {
   gold: 25,
   type: [infantry, melee, unique]
 }
+boyar: {
+  display: Boyar,
+  id: 876,
+  wood: 0,
+  food: 50,
+  gold: 80,
+  type: [cavalry, melee, unique]
+}
+#camel-archer: {
+#  display: Camel Archer,
+#  id: 87,
+#  wood: 50,
+#  food: 0,
+#  gold: 60,
+#  type: [cavalry, archer, ranged, unique]
+#}
 cataphract: {
   display: Cataphract,
   id: 40,
@@ -85,12 +166,52 @@ chu-ko-nu: {
   gold: 35,
   type: [archer, ranged, unique]
 }
+conquistador: {
+  display: Conquistador,
+  id: 771,
+  wood: 0,
+  food: 60,
+  gold: 70,
+  type: [gunpowder, cavalry, ranged, unique]
+}
+elephant-archer: {
+  display: Elephant Archer,
+  id: 873,
+  wood: 0,
+  food: 100,
+  gold: 80,
+  type: [archer, cavalry, ranged, unique]
+}
+genoese-crossbowman: {
+  display: Genoese Crossbowman,
+  id: 866,
+  wood: 0,
+  food: 45,
+  gold: 45,
+  type: [archer, ranged, unique]
+}
+#gbeto: {
+#  display: Gbeto,
+#  id: 866,
+#  wood: 0,
+#  food: 50,
+#  gold: 40,
+#  type: [ranged, unique]
+#}
 huskarl: {
   display: Huskarl,
   id: 41,
   wood: 0,
-  food: 200,
-  gold: 75,
+  food: 80,
+  gold: 40,
+  type: [infantry, melee, unique]
+}
+jaguar-warrior: {
+  display: Jaguar Warrior,
+  id: 725,
+  wood: 0,
+  food: 60,
+  gold: 30,
   type: [infantry, melee, unique]
 }
 janissary: {
@@ -101,6 +222,22 @@ janissary: {
   gold: 55,
   type: [gunpowder, ranged, unique]
 }
+kamayuk: {
+  display: Kamayuk,
+  id: 879,
+  wood: 0,
+  food: 60,
+  gold: 30,
+  type: [infantry, melee, unique]
+}
+#karambit-warrior: {
+#  display: Karambit Warrior,
+#  id: 879,
+#  wood: 0,
+#  food: 25,
+#  gold: 10,
+#  type: [infantry, melee, unique]
+#}
 longbowman: {
   display: Longbowman,
   id: 8,
@@ -108,6 +245,14 @@ longbowman: {
   food: 0,
   gold: 40,
   type: [archer, ranged, unique]
+}
+magyar-huszar: {
+  display: Magyar Huszar,
+  id: 869,
+  wood: 0,
+  food: 80,
+  gold: 10,
+  type: [cavalry, melee, unique]
 }
 mameluke: {
   display: Mameluke,
@@ -125,6 +270,38 @@ mangudai: {
   gold: 65,
   type: [cavalry, archer, ranged, unique]
 }
+#organ-gun: {
+#  display: Organ Gun,
+#  id: ???,
+#  wood: 80,
+#  food: 0,
+#  gold: 60,
+#  type: [siege, gunpowder, ranged, unique]
+#}
+petard: {
+  display: Petard,
+  id: 440,
+  wood: 0,
+  food: 65,
+  gold: 20,
+  type: [gunpowder]
+}
+plumed-archer: {
+  display: Plumed Archer,
+  id: 763,
+  wood: 0,
+  food: 40,
+  gold: 40,
+  type: [ranged, archer, unique]
+}
+#rattan-archer: {
+#  display: Rattan Archer,
+#  id: 763,
+#  wood: 50,
+#  food: 0,
+#  gold: 45,
+#  type: [ranged, archer, unique]
+#}
 samurai: {
   display: Samurai,
   id: 291,
@@ -132,6 +309,22 @@ samurai: {
   food: 60,
   gold: 30,
   type: [infantry, melee, unique]
+}
+#shotel-warrior: {
+#  display: Shotel Warrior,
+#  id: 291,
+#  wood: 0,
+#  food: 50,
+#  gold: 35,
+#  type: [infantry, melee, unique]
+#}
+tarkan: {
+  display: Tarkan,
+  id: 755,
+  wood: 0,
+  food: 60,
+  gold: 60,
+  type: [cavalry, melee, unique]
 }
 teutonic-knight: {
   display: Teutonic Knight,
@@ -156,6 +349,14 @@ war-elephant: {
   food: 70,
   gold: 75,
   type: [cavalry, melee, unique]
+}
+war-wagon: {
+  display: War Wagon,
+  id: 827,
+  wood: 110,
+  food: 0,
+  gold: 60,
+  type: [cavalry, ranged, unique]
 }
 woad-raider: {
   display: Woad Raider,
@@ -185,14 +386,14 @@ scorpion: {
 }
 battering-ram: {
   display: Battering Ram,
-  id: 162,
+  id: 35,
   wood: 160,
   food: 0,
   gold: 75,
   type: [siege]
 }
 
-### Monk
+### Monks
 monk: {
   display: Monk,
   id: 125,
@@ -200,6 +401,14 @@ monk: {
   food: 0,
   gold: 100,
   type: [monk]
+}
+missionary: {
+  display: Missionary,
+  id: 775,
+  wood: 0,
+  food: 0,
+  gold: 100,
+  type: [monk, cavalry, unique]
 }
 
 ### Technology
@@ -214,6 +423,14 @@ fletching: {
 forging: {
   display: Forging,
   id: 67,
+  wood: 0,
+  food: 150,
+  gold: 0,
+  type: [tech]
+}
+husbandry: {
+  display: Husbandry,
+  id: 39,
   wood: 0,
   food: 150,
   gold: 0,
@@ -240,6 +457,14 @@ scale-barding: {
   id: 81,
   wood: 0,
   food: 150,
+  gold: 0,
+  type: [tech]
+}
+thumb-ring: {
+  display: Thumb Ring,
+  id: 437,
+  wood: 250,
+  food: 300,
   gold: 0,
   type: [tech]
 }

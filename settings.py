@@ -16,9 +16,6 @@ SAVE_DIR = './save'
 UNIT_DATA_PATH = './units.yaml'
 BOT_DATA_PATH = './bots.yaml'
 
-AOE2_PATH = 'E:/steam/steamapps/common/Age2HD/AoK HD.exe'
-# INPUT_SCENARIO
-
 # Load data files and keep them available
 with open(UNIT_DATA_PATH, 'r') as f:
     UNIT_DATA = yaml.load(f)

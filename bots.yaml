@@ -1,25 +1,101 @@
 ---
+name: uniquebot
+display: Unique
+like: 'unique'
+dislike: ''
+---
+name: rangedbot
+display: Artillery
+like: 'ranged'
+dislike: 'melee'
+---
+name: cavalrybot
+display: Ponies
+like: 'cavalry, cavalry'
+dislike: 'siege, infantry, archer'
+---
 name: meleebot
-display: KILLBOT
+display: SmAsHbOt
 like: 'melee'
 dislike: 'ranged'
 ---
-name: cavalrybot
-display: I <3 Ponies
-like: 'cavalry'
-dislike: 'siege, infantry, archer'
+name: monkbot
+display: Holier Than Thou
+like: 'monk, monk, monk'
+dislike: 'siege'
 ---
 name: archerbot
 display: Darken The Sky
-like: 'archer'
-dislike: 'infantry'
+like: 'archer, archer'
+dislike: 'infantry, monk'
+---
+name: normalbot
+display: normalbot
+like: ''
+dislike: 'unique, unique'
+---
+name: pacifistbot
+display: Ghandi
+like: ''
+dislike: 'ranged, melee'
 ---
 name: siegebot
 display: SiegeBot9000
-like: 'siege'
+like: 'siege, siege'
 dislike: ''
 ---
 name: techbot
 display: TechnoMagic
 like: 'tech'
 dislike: ''
+---
+name: gunbot
+display: BOOMbot
+like: 'gunpowder, gunpowder'
+dislike: 'archer'
+---
+name: bot1
+display: bot1
+like: ''
+dislike: ''
+---
+name: bot2
+display: bot2
+like: ''
+dislike: ''
+---
+name: bot3
+display: bot3
+like: ''
+dislike: ''
+---
+name: bot4
+display: bot4
+like: ''
+dislike: ''
+---
+name: bot5
+display: bot5
+like: ''
+dislike: ''
+---
+name: bot6
+display: bot6
+like: ''
+dislike: ''
+---
+name: bot7
+display: bot7
+like: ''
+dislike: ''
+---
+name: bot8
+display: bot8
+like: ''
+dislike: ''
+---
+name: bot9
+display: bot9
+like: ''
+dislike: ''
+
