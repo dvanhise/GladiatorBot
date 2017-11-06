@@ -2,7 +2,7 @@
 Genetic algorithm to select an ideal army composition in an Age of Empires 2 scenario.  Testing the armies is automated via generating and running scenarios in the game.
 
 ## Setup
-# Warning - The way this project was put together is not very conducive to a clean setup.  The following list is almost certainly incomplete with regards to getting it working in your computer.
+### Warning - The way this project was put together is not very conducive to a clean setup.  The following list is almost certainly incomplete with regards to getting it working in your computer.
 * Install Python and PHP
 * Install python libraries: pip install -r requirements.txt
 * Change SCX::$scenarios_path in Compiler.php

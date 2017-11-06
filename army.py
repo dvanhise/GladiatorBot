@@ -51,6 +51,7 @@ class Army(object):
         return os.path.join(SAVE_DIR, self.name + '.yaml')
 
     def makeChild(self, army):
+        print('%s mates with %s' % (self.display, army.display))
         tempGenome = deepcopy(self.genome)
         if random() <= CROSSOVER_RATE:
             tempGenome.crossover(army.getGenome())
@@ -90,11 +91,19 @@ class Army(object):
             fairRatio = value/valueTotal
             unit = UNIT_DATA[key]
             mod = 1.5  # This helps but might cause invalid unit purchases
-            count = min(
-                WOOD * fairRatio * mod/(woodDemand * (unit['wood'] or 1)),
-                FOOD * fairRatio * mod/(foodDemand * (unit['food'] or 1)),
-                GOLD * fairRatio * mod/(goldDemand * (unit['gold'] or 1))
-            )
+            allowance = []
+            if unit['wood']:
+                woodAllowance = WOOD * fairRatio * mod/(woodDemand * unit['wood'])
+                allowance.append(woodAllowance)
+            if unit['food']:
+                foodAllowance = FOOD * fairRatio * mod/(foodDemand * unit['food'])
+                allowance.append(foodAllowance)
+            if unit['gold']:
+                goldAllowance = GOLD * fairRatio * mod/(goldDemand * unit['gold'])
+                allowance.append(goldAllowance)
+
+            count = min(allowance)
+            avg = sum(allowance)/len(allowance)
 
             # Only one of a technology can be had
             if 'tech' in unit['type']:
@@ -102,7 +111,7 @@ class Army(object):
 
             resources.purchase(unit, int(count))
             armyComp[key] = int(count)
-            remainderTab[key] = count - int(count)
+            remainderTab[key] = avg - int(count)
 
         # Go through remainderTab sorted by highest value and build one of each unit if it can be afforded.
         #   This is to fairly use up remaining resources
@@ -113,6 +122,7 @@ class Army(object):
                 resources.purchase(unit, 1)
                 armyComp[key] += 1
 
+        print(self.display + ' resources remaining: ' + str(resources))
         return armyComp
 
     def getGenome(self):

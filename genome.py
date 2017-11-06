@@ -12,7 +12,7 @@ class Genome(dict):
     # Uniform crossover
     def crossover(self, mate):
         for key in self.keys():
-            self[key] = random.choice(self[key], mate[key])
+            self[key] = random.choice([self[key], mate[key]])
 
     def power(self, p):
         g = Genome()

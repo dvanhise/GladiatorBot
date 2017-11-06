@@ -7,7 +7,7 @@ import random
 
 def main():
     armies = []
-    for bot in BOT_DATA:
+    for bot in BOT_DATA[:POP_SIZE]:
         armies.append(Army(bot))
 
     # Fill out rest of population with completely random bots
@@ -18,11 +18,12 @@ def main():
 
     try:
         with open(os.path.join(SAVE_DIR, 'gen.txt'), 'r') as genFile:
-            gen = genFile.read()
+            gen = int(genFile.read())
     except FileNotFoundError:
         gen = 1
 
     while True:
+        print("Starting generation %d" % gen)
         sim.setEntrants(armies)
         sim.runSim()
 
@@ -39,7 +40,7 @@ def main():
 
         gen += 1
         with open(os.path.join(SAVE_DIR, 'gen.txt'), 'w') as genFile:
-            genFile.write(gen)
+            genFile.write(str(gen))
 
 
 if __name__ == "__main__":

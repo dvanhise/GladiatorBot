@@ -26,12 +26,11 @@ class Simulation(object):
         shuffle(matches)
         for home, away in matches:
             self.generateScenario(home, away)
-            result = self.runBattle(home, away)
+            result = self.runBattle()
             while result == 0:
                 print('Inconclusive match, regenerating scenario file')
                 self.generateScenario(home, away)
-                result = self.runBattle(home, away)
-
+                result = self.runBattle()
             if result == -1:
                 print('%s defeats %s' % (away.display, home.display))
                 home.losses += 1
@@ -44,10 +43,12 @@ class Simulation(object):
         print('End of generation results:')
         self.printScore()
 
-    def printScore(self):
+    def printScore(self, num=20):
         sorted(self.entrants, key=lambda x: x.wins)
-        for army in sorted(self.entrants, key=lambda x: x.wins):
-            print('%s  %d-%d' % (army.name, army.wins, army.losses))
+        for army in sorted(self.entrants, key=lambda x: x.wins, reverse=True)[:num]:
+            print('%s  %d-%d' % (army.display, army.wins, army.losses))
+        if len(self.entrants) > num:
+            print('...')
 
     def setEntrants(self, armies):
         self.entrants = armies
@@ -56,8 +57,8 @@ class Simulation(object):
     #  1 for home team win
     #  0 for inconclusive result
     #  -1 for away team win
-    def runBattle(self, home, away):
-        time.sleep(4)   # If we don't wait, AoE2 might read scenario before it's done compiling
+    def runBattle(self):
+        time.sleep(5)   # If we don't wait, AoE2 might read scenario before it's done compiling
         pyautogui.press('f10')   # Open menu and select 'Restart'
         pyautogui.press('up')
         pyautogui.press('up')
@@ -71,7 +72,6 @@ class Simulation(object):
             # Yes, seriously, that's how we're detecting who won and when the match is over.  If the home team is
             # given artificial point inflation, it will always be on top
             image = pyautogui.screenshot()
-
             awayLine = image.crop((1750, 890, 1910, 891)).convert('L')
             homeLine = image.crop((1750, 870, 1910, 871)).convert('L')
             if self.imageIsLine(homeLine):
@@ -161,5 +161,12 @@ class Simulation(object):
         return data
 
     def assertAoe2Running(self):
-        if not [1 for pid in psutil.pids() if psutil.Process(pid).name() == "AoK HD.exe"]:
+        found = False
+        for pid in psutil.pids():
+            try:
+                if psutil.Process(pid).name() == "AoK HD.exe":
+                    found = True
+            except ProcessLookupError:
+                pass
+        if not found:
             raise RuntimeError("AoE2 HD must be running with the arena scenario.")

@@ -1,100 +1,100 @@
 ---
+name: monkbot
+display: Red
+like: 'monk, monk, monk, monk'
+dislike: 'siege'
+---
+name: archerbot
+display: Green
+like: 'archer, archer'
+dislike: 'infantry, monk'
+---
+name: gunbot
+display: Blue
+like: 'gunpowder, gunpowder'
+dislike: 'archer'
+---
+name: cavalrybot
+display: Orange
+like: 'cavalry, cavalry'
+dislike: 'siege, infantry, archer'
+---
+name: normalbot
+display: Aquamarine
+like: ''
+dislike: 'unique, unique'
+---
 name: uniquebot
-display: Unique
+display: Indigo
 like: 'unique'
 dislike: 'tech'
 ---
 name: rangedbot
-display: Artillery
+display: Black
 like: 'ranged'
 dislike: 'melee'
 ---
-name: cavalrybot
-display: Ponies
-like: 'cavalry, cavalry'
-dislike: 'siege, infantry, archer'
----
 name: meleebot
-display: SmAsHbOt
+display: Yellow
 like: 'melee'
 dislike: 'ranged'
 ---
-name: monkbot
-display: Holier Than Thou
-like: 'monk, monk, monk'
-dislike: 'siege'
----
-name: archerbot
-display: Darken The Sky
-like: 'archer, archer'
-dislike: 'infantry, monk'
----
-name: normalbot
-display: normalbot
-like: ''
-dislike: 'unique, unique'
----
 name: pacifistbot
-display: Ghandi
+display: Seafoam Green
 like: ''
 dislike: 'ranged, melee'
 ---
 name: siegebot
-display: SiegeBot9000
+display: Fuschia
 like: 'siege, siege'
 dislike: ''
 ---
 name: techbot
-display: TechnoMagic
+display: Beige
 like: 'tech'
 dislike: ''
 ---
-name: gunbot
-display: BOOMbot
-like: 'gunpowder, gunpowder'
-dislike: 'archer'
----
 name: unitbot
-display: More Units
+display: Gold
 like: ''
 dislike: 'tech, tech'
 ---
 name: bot1
-display: BotWithAName
+display: Teal
 like: ''
 dislike: ''
 ---
 name: bot2
-display: Steve
+display: Silver
 like: ''
 dislike: ''
 ---
 name: bot3
-display: A Wolf
+display: White
 like: ''
 dislike: ''
 ---
 name: bot4
-display: A Bear
+display: Violet
 like: ''
 dislike: ''
 ---
 name: bot5
-display: Snips
+display: Pink
 like: ''
 dislike: ''
 ---
 name: bot6
-display: asdf
+display: Purple
 like: ''
 dislike: ''
 ---
 name: bot7
-display: bot7
+display: Turquoise
 like: ''
 dislike: ''
 ---
 name: bot8
-display: bot8
+display: Peridot
 like: ''
 dislike: ''
