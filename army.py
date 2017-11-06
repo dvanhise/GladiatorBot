@@ -90,7 +90,7 @@ class Army(object):
         for key, value in normGenome.items():
             fairRatio = value/valueTotal
             unit = UNIT_DATA[key]
-            mod = 1.5  # This helps but might cause invalid unit purchases
+            mod = 1.6  # This helps but might cause invalid unit purchases
             allowance = []
             if unit['wood']:
                 woodAllowance = WOOD * fairRatio * mod/(woodDemand * unit['wood'])

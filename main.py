@@ -1,5 +1,6 @@
 from army import Army
 from simulation import Simulation
+from obscomm import Obscomm
 from settings import POP_SIZE, BOT_DATA, SAVE_DIR
 import os
 import random
@@ -23,7 +24,8 @@ def main():
         gen = 1
 
     while True:
-        print("Starting generation %d" % gen)
+        print('Starting generation %d' % gen)
+        Obscomm().set('gen', 'Generation %d' % gen)
         sim.setEntrants(armies)
         sim.runSim()
 

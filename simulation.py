@@ -1,4 +1,5 @@
 from settings import UNIT_DATA
+from obscomm import Obscomm
 
 import pyautogui
 import subprocess
@@ -14,6 +15,7 @@ class Simulation(object):
 
     def __init__(self):
         self.entrants = []
+        self.obs = Obscomm()
         pyautogui.PAUSE = .25
 
         self.assertAoe2Running()
@@ -21,34 +23,34 @@ class Simulation(object):
         pyautogui.click(1000, 1000, button='left')
 
     def runSim(self):
+        self.obs.split('scoreboard', self.getScoreStrings(), size=9)
         # Create and shuffle full round robin
         matches = list(combinations(self.entrants, 2))
         shuffle(matches)
         for home, away in matches:
             self.generateScenario(home, away)
+            self.obs.set('victory', '')
             result = self.runBattle()
             while result == 0:
                 print('Inconclusive match, regenerating scenario file')
+                self.obs.set('victory', 'Battle Inconclusive')
                 self.generateScenario(home, away)
                 result = self.runBattle()
             if result == -1:
                 print('%s defeats %s' % (away.display, home.display))
+                self.obs.set('victory', '%s defeats %s' % (away.display, home.display))
                 home.losses += 1
                 away.wins += 1
             elif result == 1:
                 print('%s defeats %s' % (home.display, away.display))
+                self.obs.set('victory', '%s defeats %s' % (home.display, away.display))
                 away.losses += 1
                 home.wins += 1
+            self.obs.split('scoreboard', self.getScoreStrings(), size=9)
 
         print('End of generation results:')
-        self.printScore()
-
-    def printScore(self, num=20):
-        sorted(self.entrants, key=lambda x: x.wins)
-        for army in sorted(self.entrants, key=lambda x: x.wins, reverse=True)[:num]:
-            print('%s  %d-%d' % (army.display, army.wins, army.losses))
-        if len(self.entrants) > num:
-            print('...')
+        for st in self.getScoreStrings():
+            print(st)
 
     def setEntrants(self, armies):
         self.entrants = armies
@@ -58,7 +60,6 @@ class Simulation(object):
     #  0 for inconclusive result
     #  -1 for away team win
     def runBattle(self):
-        time.sleep(5)   # If we don't wait, AoE2 might read scenario before it's done compiling
         pyautogui.press('f10')   # Open menu and select 'Restart'
         pyautogui.press('up')
         pyautogui.press('up')
@@ -96,9 +97,7 @@ class Simulation(object):
 
         initialActions = self.armyPatrolString(1, homeCoords, awayCoords) + \
             self.armyPatrolString(2, awayCoords, homeCoords) + \
-            '\nEfft_ChangeView(1, [%d,%d]);' % (int((homeCoords[0] + awayCoords[0])/2)-1, int((homeCoords[1] + awayCoords[1])/2)) + \
-            self.armyCompChat(1, homeComp) + \
-            self.armyCompChat(2, awayComp)
+            '\nEfft_ChangeView(1, [%d,%d]);' % (int((homeCoords[0] + awayCoords[0])/2)-1, int((homeCoords[1] + awayCoords[1])/2))
 
         subDict = {
             'SetPlayerNames': '\nSetPlayerName(1, "%s");' % home.display + '\nSetPlayerName(2, "%s");' % away.display,
@@ -114,6 +113,12 @@ class Simulation(object):
         # Generate scenario, needs to be called twice
         subprocess.call('php .\\php_scx\\Compiler.php', shell=True)
         subprocess.call('php .\\php_scx\\Compiler.php', shell=True)
+        time.sleep(5)   # If we don't wait it breaks, maybe AoE2 is reading scenario before it's done compiling
+
+        self.obs.set('home-comp', self.getArmyCompStrings(homeComp))
+        self.obs.set('away-comp', self.getArmyCompStrings(awayComp))
+        self.obs.set('home-display', '%s  %d-%d' % (home.display, home.wins, home.losses))
+        self.obs.set('away-display', '%d-%d  %s' % (away.wins, away.losses, away.display))
 
     def imageIsLine(self, im):
         pixels = [im.getpixel((x, 0)) for x in range(im.width)]
@@ -150,15 +155,17 @@ class Simulation(object):
             enemyCoords
         )
 
-    def armyCompChat(self, playerNum, comp):
-        data = ''
-        countList = []
+    def getScoreStrings(self):
+        output = []
+        for army in sorted(self.entrants, key=lambda x: x.wins, reverse=True):
+            output.append('%s  %d-%d' % (army.display, army.wins, army.losses))
+        return output
+
+    def getArmyCompStrings(self, comp):
+        output = []
         for unit, num in sorted(comp.items(), key=lambda x: x[1], reverse=True):
-            if num > 0:
-                countList.append('%d %s' % (num, UNIT_DATA[unit]['display']))
-        for line in list(chunked(countList, 4)):
-            data += '\nEfft_Chat(%d, "%s");' % (playerNum, ' - '.join(line))
-        return data
+            output.append('%d %s' % (num, UNIT_DATA[unit]['display']))
+        return output
 
     def assertAoe2Running(self):
         found = False
