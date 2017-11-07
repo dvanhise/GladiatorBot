@@ -11,6 +11,7 @@ WOOD = 1500
 FOOD = 1500
 GOLD = 2000
 
+# For arenabase
 HOME_SPAWN = [8, 8]
 AWAY_SPAWN = [26, 26]
 # For arenabase2

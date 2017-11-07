@@ -15,11 +15,8 @@ class Simulation(object):
     def __init__(self):
         self.entrants = []
         self.obs = Obscomm()
-        pyautogui.PAUSE = .25
-
+        pyautogui.PAUSE = .2
         self.assertAoe2Running()
-        # (Hopefully) click within the AoE2 window
-        pyautogui.click(1000, 1000, button='left')
 
     def runSim(self):
         self.obs.split('scoreboard', self.getScoreStrings(), size=9)
@@ -59,7 +56,10 @@ class Simulation(object):
     #  0 for inconclusive result
     #  -1 for away team win
     def runBattle(self):
-        pyautogui.press('f10')   # Open menu and select 'Restart'
+        # (Hopefully) click within the AoE window
+        pyautogui.click(1000, 1000, button='left')
+        # Open menu and select 'Restart' and 'Yes'
+        pyautogui.press('f10')
         pyautogui.press('up')
         pyautogui.press('up')
         pyautogui.press('enter')
