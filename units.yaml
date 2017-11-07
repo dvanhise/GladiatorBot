@@ -32,7 +32,6 @@ condottierro: {
   type: [infantry, melee, unique]
 }
 
-
 ### Archery Range
 cavalry-archer: {
   display: Cavalry Archer,
@@ -277,14 +276,6 @@ organ-gun: {
   food: 0,
   gold: 60,
   type: [siege, gunpowder, ranged, unique]
-}
-petard: {
-  display: Petard,
-  id: 440,
-  wood: 0,
-  food: 65,
-  gold: 20,
-  type: [gunpowder]
 }
 plumed-archer: {
   display: Plumed Archer,

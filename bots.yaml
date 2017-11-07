@@ -1,11 +1,11 @@
 ---
 name: monkbot
 display: Red
-like: 'monk, monk, monk, monk'
-dislike: 'siege'
+like: 'monk, monk, monk'
+dislike: 'siege, archer'
 ---
 name: archerbot
-display: Green
+display: Chartreuse
 like: 'archer, archer'
 dislike: 'infantry, monk'
 ---
@@ -40,7 +40,7 @@ like: 'melee'
 dislike: 'ranged'
 ---
 name: pacifistbot
-display: Seafoam Green
+display: Seafoam
 like: ''
 dislike: 'ranged, melee'
 ---
@@ -65,7 +65,7 @@ like: ''
 dislike: ''
 ---
 name: bot2
-display: Silver
+display: Rainbow
 like: ''
 dislike: ''
 ---

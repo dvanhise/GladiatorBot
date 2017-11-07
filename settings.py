@@ -11,6 +11,12 @@ WOOD = 1500
 FOOD = 1500
 GOLD = 2000
 
+HOME_SPAWN = [8, 8]
+AWAY_SPAWN = [26, 26]
+# For arenabase2
+# HOME_SPAWN = [20, 7]
+# AWAY_SPAWN = [20, 35]
+
 SAVE_DIR = './save'
 
 UNIT_DATA_PATH = './units.yaml'

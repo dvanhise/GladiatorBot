@@ -41,6 +41,7 @@ class Army(object):
                             beta += .5
 
                     self.genome[unitName] = betavariate(alpha=alpha, beta=beta)
+        self.comp = self.getUnitComp()
 
     # Save state to file
     def save(self):
@@ -62,7 +63,7 @@ class Army(object):
 
     # Returns dictionary of unit->count from army genome
     def getUnitComp(self):
-        normGenome = self.genome.power(2)
+        normGenome = self.genome.power(3)   # Higher number here boosts higher valued units even more
         resources = Resources(WOOD, FOOD, GOLD)
         armyComp = {}
 
@@ -90,7 +91,7 @@ class Army(object):
         for key, value in normGenome.items():
             fairRatio = value/valueTotal
             unit = UNIT_DATA[key]
-            mod = 1.6  # This helps but might cause invalid unit purchases
+            mod = 1.6   # This helps but might cause invalid unit purchases
             allowance = []
             if unit['wood']:
                 woodAllowance = WOOD * fairRatio * mod/(woodDemand * unit['wood'])
@@ -124,6 +125,17 @@ class Army(object):
 
         print(self.display + ' resources remaining: ' + str(resources))
         return armyComp
+
+    def getArmyCompStrings(self):
+        output = []
+        # Sort tech first, then by count
+        for unit, num in sorted(self.comp.items(), key=lambda x: x[1] + 20*UNIT_DATA[x[0]]['type'].count('tech'), reverse=True):
+            if num > 0:
+                if 'tech' in UNIT_DATA[unit]['type']:
+                    output.append(UNIT_DATA[unit]['display'])
+                else:
+                    output.append('%d %s' % (num, UNIT_DATA[unit]['display']))
+        return output
 
     def getGenome(self):
         return self.genome

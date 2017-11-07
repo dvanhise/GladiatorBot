@@ -1,4 +1,4 @@
-from settings import UNIT_DATA
+from settings import UNIT_DATA, HOME_SPAWN, AWAY_SPAWN
 from obscomm import Obscomm
 
 import pyautogui
@@ -8,7 +8,6 @@ import psutil
 from random import shuffle
 from string import Template
 from itertools import combinations
-from more_itertools import chunked
 
 
 class Simulation(object):
@@ -49,8 +48,8 @@ class Simulation(object):
             self.obs.split('scoreboard', self.getScoreStrings(), size=9)
 
         print('End of generation results:')
-        for st in self.getScoreStrings():
-            print(st)
+        for score in self.getScoreStrings():
+            print(score)
 
     def setEntrants(self, armies):
         self.entrants = armies
@@ -85,23 +84,13 @@ class Simulation(object):
         return 0
 
     def generateScenario(self, home, away):
-        # Coordinates for arenabase
-        homeCoords = [10, 10]
-        awayCoords = [24, 24]
-        # Coordinates for arenabase2
-        # homeCoords = [20, 7]
-        # awayCoords = [20, 35]
-
-        homeComp = home.getUnitComp()
-        awayComp = away.getUnitComp()
-
-        initialActions = self.armyPatrolString(1, homeCoords, awayCoords) + \
-            self.armyPatrolString(2, awayCoords, homeCoords) + \
-            '\nEfft_ChangeView(1, [%d,%d]);' % (int((homeCoords[0] + awayCoords[0])/2)-1, int((homeCoords[1] + awayCoords[1])/2))
+        initialActions = self.armyPatrolString(1, HOME_SPAWN, AWAY_SPAWN) + \
+            self.armyPatrolString(2, AWAY_SPAWN, HOME_SPAWN) + \
+            '\nEfft_ChangeView(1, [%d,%d]);' % (int((HOME_SPAWN[0] + AWAY_SPAWN[0])/2)-1, int((HOME_SPAWN[1] + AWAY_SPAWN[1])/2))
 
         subDict = {
             'SetPlayerNames': '\nSetPlayerName(1, "%s");' % home.display + '\nSetPlayerName(2, "%s");' % away.display,
-            'AddUnitsTechs': self.unitCreationString(homeComp, 1, homeCoords) + self.unitCreationString(awayComp, 2, awayCoords),
+            'AddUnitsTechs': self.unitCreationString(home.comp, 1, HOME_SPAWN) + self.unitCreationString(away.comp, 2, AWAY_SPAWN),
             'InitialActions': initialActions
         }
 
@@ -115,8 +104,8 @@ class Simulation(object):
         subprocess.call('php .\\php_scx\\Compiler.php', shell=True)
         time.sleep(5)   # If we don't wait it breaks, maybe AoE2 is reading scenario before it's done compiling
 
-        self.obs.set('home-comp', self.getArmyCompStrings(homeComp))
-        self.obs.set('away-comp', self.getArmyCompStrings(awayComp))
+        self.obs.set('home-comp', home.getArmyCompStrings())
+        self.obs.set('away-comp', away.getArmyCompStrings())
         self.obs.set('home-display', '%s  %d-%d' % (home.display, home.wins, home.losses))
         self.obs.set('away-display', '%d-%d  %s' % (away.wins, away.losses, away.display))
 
@@ -128,22 +117,21 @@ class Simulation(object):
         return True
 
     def unitCreationString(self, comp, playerNum, coords):
-        strn = ''
+        output = ''
         for unit, count in comp.items():
             unitData = UNIT_DATA[unit]
 
             if 'tech' in unitData['type']:
-                strn += '\nEfft_Research(%d, %d);' % (playerNum, unitData['id'])
+                output += '\nEfft_Research(%d, %d);' % (playerNum, unitData['id'])
             else:
                 for i in range(count):
-                    strn += '\nNewObject(%d, %d, [%d, %d], 0);' % (
+                    output += '\nNewObject(%d, %d, [%d, %d], 0);' % (
                         playerNum,
                         unitData['id'],
                         coords[0],
                         coords[1]
                     )
-
-        return strn
+        return output
 
     def armyPatrolString(self, playerNum, coords, enemyCoords):
         return '\nEfft_PatrolO(%d, Area(%d, %d, %d, %d), %s);' % (
@@ -157,14 +145,8 @@ class Simulation(object):
 
     def getScoreStrings(self):
         output = []
-        for army in sorted(self.entrants, key=lambda x: x.wins, reverse=True):
+        for army in sorted(self.entrants, key=lambda x: x.wins-x.losses, reverse=True):
             output.append('%s  %d-%d' % (army.display, army.wins, army.losses))
-        return output
-
-    def getArmyCompStrings(self, comp):
-        output = []
-        for unit, num in sorted(comp.items(), key=lambda x: x[1], reverse=True):
-            output.append('%d %s' % (num, UNIT_DATA[unit]['display']))
         return output
 
     def assertAoe2Running(self):
@@ -173,7 +155,7 @@ class Simulation(object):
             try:
                 if psutil.Process(pid).name() == "AoK HD.exe":
                     found = True
-            except ProcessLookupError:
+            except psutil.NoSuchProcess:
                 pass
         if not found:
             raise RuntimeError("AoE2 HD must be running with the arena scenario.")

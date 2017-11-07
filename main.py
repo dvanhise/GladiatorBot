@@ -31,8 +31,16 @@ def main():
 
         # Use results to generate army fitness roulette
         rouletteWheel = []
+        best = armies[0]
         for army in armies:
             rouletteWheel += [army] * army.wins
+            best = army if army.wins > best.wins else best
+        # Save data on winning bot for analysis
+        with open(os.path.join(SAVE_DIR, 'gen%d-winner.txt' % gen)) as winFile:
+            winFile.write('%s (%s)' % (best.display, best.name))
+            winFile.write('Record: %d-%d' % (best.wins, best.losses))
+            winFile.write('Army Composition:')
+            winFile.write('\n'.join(best.getArmyCompStrings()))
 
         # Save new army genes to file
         nextGenArmies = [army.makeChild(random.choice(rouletteWheel)) for army in armies]
