@@ -1,44 +1,62 @@
 from army import Army
 from simulation import Simulation
 from obscomm import Obscomm
-from settings import POP_SIZE, BOT_DATA, SAVE_DIR
+from genome import Genome
+from settings import POP_SIZE, BOT_DATA, SAVE_FILE, SAVE_DIR
 import os
 import random
+import yaml
 
 
 def main():
     armies = []
-    for bot in BOT_DATA[:POP_SIZE]:
-        armies.append(Army(bot))
-
-    # Fill out rest of population with completely random bots
-    for x in range(POP_SIZE - len(armies)):
-        armies.append(Army())
-
-    sim = Simulation()
+    scoreboardData = None
 
     try:
-        with open(os.path.join(SAVE_DIR, 'gen.txt'), 'r') as genFile:
-            gen = int(genFile.read())
+        with open(SAVE_FILE, 'r') as genFile:
+            data = yaml.load(genFile)
+        gen = data['gen']
+        for bot in BOT_DATA[:POP_SIZE]:
+            armies.append(Army(bot, Genome(data['armies'][bot.name])))
+        scoreboardData = data
+
     except FileNotFoundError:
         gen = 1
 
+        # Initial bots from bots.yaml
+        for bot in BOT_DATA[:POP_SIZE]:
+            armies.append(Army(bot))
+
+        # Fill out rest of population with completely random bots
+        for x in range(POP_SIZE - len(armies)):
+            armies.append(Army())
+
+    sim = Simulation(armies, scoreboardData)
     while True:
         print('Starting generation %d' % gen)
         Obscomm().set('gen', 'Generation %d' % gen)
-        sim.setEntrants(armies)
-        sim.runSim()
+
+        while sim.runSim():
+            with open(SAVE_FILE, 'w') as saveFile:
+                saveData = {
+                    'gen': gen,
+                    'armies': {
+                        {army.name: army.getGenome() for army in armies}
+                    },
+                    **sim.scoreboard.getSaveData()
+                }
+                yaml.dump(saveData, saveFile, default_flow_style=False)
 
         # Use results to generate army fitness roulette
         rouletteWheel = []
-        best = armies[0]
+        best = findIn(armies, sim.scoreboard.getBest())
         for army in armies:
-            rouletteWheel += [army] * army.wins
-            best = army if army.wins > best.wins else best
+            rouletteWheel += [army] * sim.scoreboard.getRecord(army.name)[0]
+        record = sim.scoreboard.getRecord(best.name)
         # Save data on winning bot for analysis
         with open(os.path.join(SAVE_DIR, 'gen%d-winner.txt' % gen)) as winFile:
             winFile.write('%s (%s)' % (best.display, best.name))
-            winFile.write('Record: %d-%d' % (best.wins, best.losses))
+            winFile.write('Record: %d-%d' % (record[0], record[1]))
             winFile.write('Army Composition:')
             winFile.write('\n'.join(best.getArmyCompStrings()))
 
@@ -49,9 +67,13 @@ def main():
             army.save()
 
         gen += 1
-        with open(os.path.join(SAVE_DIR, 'gen.txt'), 'w') as genFile:
-            genFile.write(str(gen))
+        sim = Simulation(armies)
 
+
+def findIn(armies, name):
+    for army in armies:
+        if army.name == name:
+            return name
 
 if __name__ == "__main__":
     main()

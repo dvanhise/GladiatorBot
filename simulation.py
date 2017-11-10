@@ -1,29 +1,29 @@
 from settings import UNIT_DATA, HOME_SPAWN, AWAY_SPAWN
 from obscomm import Obscomm
+from scoreboard import Scoreboard
 
 import pyautogui
 import subprocess
 import time
 import psutil
-from random import shuffle
 from string import Template
-from itertools import combinations
 
 
 class Simulation(object):
 
-    def __init__(self):
-        self.entrants = []
+    def __init__(self, entrants, scoreboardData=None):
+        self.entrants = {entrant.name: entrant for entrant in entrants}
         self.obs = Obscomm()
+        self.scoreboard = Scoreboard(self.entrants.keys(), saveData=scoreboardData)
+
         pyautogui.PAUSE = .2
         self.assertAoe2Running()
 
     def runSim(self):
-        self.obs.split('scoreboard', self.getScoreStrings(), size=9)
-        # Create and shuffle full round robin
-        matches = list(combinations(self.entrants, 2))
-        shuffle(matches)
-        for home, away in matches:
+        self.obs.split('scoreboard', self.scoreboard.getScoreStrings(), size=9)
+
+        for homeName, awayName in self.scoreboard.getNextMatch():
+            home, away = self.entrants[homeName], self.entrants[awayName]
             self.generateScenario(home, away)
             self.obs.set('victory', '')
             result = self.runBattle()
@@ -32,24 +32,23 @@ class Simulation(object):
                 self.obs.set('victory', 'Battle Inconclusive')
                 self.generateScenario(home, away)
                 result = self.runBattle()
+
             if result == -1:
                 print('%s defeats %s' % (away.display, home.display))
                 self.obs.set('victory', '%s defeats %s' % (away.display, home.display))
-                home.losses += 1
-                away.wins += 1
+                self.scoreboard.result(away.name, home.name)
             elif result == 1:
                 print('%s defeats %s' % (home.display, away.display))
                 self.obs.set('victory', '%s defeats %s' % (home.display, away.display))
-                away.losses += 1
-                home.wins += 1
-            self.obs.split('scoreboard', self.getScoreStrings(), size=9)
+                self.scoreboard.result(away.name, home.name)
+
+            self.obs.split('scoreboard', self.scoreboard.getScoreStrings(), size=9)
+            yield
 
         print('End of generation results:')
-        for score in self.getScoreStrings():
+        for score in self.scoreboard.getScoreStrings():
             print(score)
-
-    def setEntrants(self, armies):
-        self.entrants = armies
+        return
 
     # Run battle with existing script file and return:
     #  1 for home team win
@@ -58,6 +57,7 @@ class Simulation(object):
     def runBattle(self):
         # (Hopefully) click within the AoE window
         pyautogui.click(1000, 1000, button='left')
+
         # Open menu and select 'Restart' and 'Yes'
         pyautogui.press('f10')
         pyautogui.press('up')
@@ -142,12 +142,6 @@ class Simulation(object):
             coords[1]+4,
             enemyCoords
         )
-
-    def getScoreStrings(self):
-        output = []
-        for army in sorted(self.entrants, key=lambda x: x.wins-x.losses, reverse=True):
-            output.append('%s  %d-%d' % (army.display, army.wins, army.losses))
-        return output
 
     def assertAoe2Running(self):
         found = False

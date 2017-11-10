@@ -1,19 +1,16 @@
 from random import random, randint, betavariate
 from copy import deepcopy
-import os.path
-import yaml
 
 from genome import Genome
 from resources import Resources
 
-from settings import MUT_RATE, CROSSOVER_RATE, SAVE_DIR, WOOD, FOOD, GOLD, UNIT_DATA
+from settings import MUT_RATE, CROSSOVER_RATE, WOOD, FOOD, GOLD, UNIT_DATA
 
 
 class Army(object):
 
     def __init__(self, botData=None, genome=None):
-        self.wins = 0
-        self.losses = 0
+
         if botData:
             self.name = botData.get('name', 'bot' + str(randint(0, 10**6)))
             self.display = botData.get('display', self.name)
@@ -23,33 +20,20 @@ class Army(object):
         if genome:
             self.genome = genome
         else:
-            try:
-                with open(self.getSavePath(), 'r') as data:
-                    self.genome = Genome(yaml.load(data))
-            except FileNotFoundError:
-                # If no file is found, assume first run and randomize genome
-                self.genome = Genome()
-                for unitName, unitData in UNIT_DATA.items():
-                    # Use a beta distribution weighted by bot's likes and dislikes
-                    # Magic numbers are magic   (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧
-                    alpha = beta = 1
-                    for like in (botData.get('like', []) if botData else []):
-                        if like in unitData['type']:
-                            alpha += .5
-                    for dislike in (botData.get('dislike', []) if botData else []):
-                        if dislike in unitData['type']:
-                            beta += .5
+            self.genome = Genome()
+            for unitName, unitData in UNIT_DATA.items():
+                # Use a beta distribution weighted by bot's likes and dislikes
+                # Magic numbers are magic   (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧
+                alpha = beta = 1
+                for like in (botData.get('like', []) if botData else []):
+                    if like in unitData['type']:
+                        alpha += .5
+                for dislike in (botData.get('dislike', []) if botData else []):
+                    if dislike in unitData['type']:
+                        beta += .5
 
-                    self.genome[unitName] = betavariate(alpha=alpha, beta=beta)
+                self.genome[unitName] = betavariate(alpha=alpha, beta=beta)
         self.comp = self.getUnitComp()
-
-    # Save state to file
-    def save(self):
-        with open(self.getSavePath(), 'w') as outfile:
-            yaml.dump(self.genome, outfile, default_flow_style=False)
-
-    def getSavePath(self):
-        return os.path.join(SAVE_DIR, self.name + '.yaml')
 
     def makeChild(self, army):
         print('%s mates with %s' % (self.display, army.display))

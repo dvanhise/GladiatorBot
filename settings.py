@@ -18,6 +18,7 @@ AWAY_SPAWN = [26, 26]
 # HOME_SPAWN = [20, 7]
 # AWAY_SPAWN = [20, 35]
 
+SAVE_FILE = 'save.txt'
 SAVE_DIR = './save'
 
 UNIT_DATA_PATH = './units.yaml'
