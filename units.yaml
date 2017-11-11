@@ -23,8 +23,8 @@ eagle-warrior: {
   gold: 50,
   type: [infantry, melee]
 }
-condottierro: {
-  display: Condottierro,
+condottiero: {
+  display: Condottiero,
   id: 882,
   wood: 0,
   food: 50,
@@ -181,14 +181,6 @@ elephant-archer: {
   gold: 80,
   type: [archer, cavalry, ranged, unique]
 }
-genoese-crossbowman: {
-  display: Genoese Crossbowman,
-  id: 866,
-  wood: 0,
-  food: 45,
-  gold: 45,
-  type: [archer, ranged, unique]
-}
 gbeto: {
   display: Gbeto,
   id: 1013,
@@ -196,6 +188,14 @@ gbeto: {
   food: 50,
   gold: 40,
   type: [ranged, unique]
+}
+genoese-crossbowman: {
+  display: Genoese Crossbowman,
+  id: 866,
+  wood: 0,
+  food: 45,
+  gold: 45,
+  type: [archer, ranged, unique]
 }
 huskarl: {
   display: Huskarl,
@@ -337,7 +337,7 @@ war-elephant: {
   display: War Elephant,
   id: 239,
   wood: 0,
-  food: 70,
+  food: 200,
   gold: 75,
   type: [cavalry, melee, unique]
 }

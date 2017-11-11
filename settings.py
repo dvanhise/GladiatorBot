@@ -13,7 +13,7 @@ GOLD = 2000
 
 # For arenabase
 HOME_SPAWN = [8, 8]
-AWAY_SPAWN = [26, 26]
+AWAY_SPAWN = [27, 27]
 # For arenabase2
 # HOME_SPAWN = [20, 7]
 # AWAY_SPAWN = [20, 35]

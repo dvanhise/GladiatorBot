@@ -14,13 +14,13 @@ class Simulation(object):
     def __init__(self, entrants, scoreboardData=None):
         self.entrants = {entrant.name: entrant for entrant in entrants}
         self.obs = Obscomm()
-        self.scoreboard = Scoreboard(self.entrants.keys(), saveData=scoreboardData)
+        self.scoreboard = Scoreboard(list(self.entrants.keys()), saveData=scoreboardData)
 
         pyautogui.PAUSE = .2
         self.assertAoe2Running()
 
     def runSim(self):
-        self.obs.split('scoreboard', self.scoreboard.getScoreStrings(), size=9)
+        self.obs.split('scoreboard', self.scoreboard.getScoreStrings(self.entrants), size=9)
 
         for homeName, awayName in self.scoreboard.getNextMatch():
             home, away = self.entrants[homeName], self.entrants[awayName]
@@ -31,6 +31,7 @@ class Simulation(object):
                 print('Inconclusive match, regenerating scenario file')
                 self.obs.set('victory', 'Battle Inconclusive')
                 self.generateScenario(home, away)
+                self.obs.set('victory', '')
                 result = self.runBattle()
 
             if result == -1:
@@ -42,13 +43,15 @@ class Simulation(object):
                 self.obs.set('victory', '%s defeats %s' % (home.display, away.display))
                 self.scoreboard.result(away.name, home.name)
 
-            self.obs.split('scoreboard', self.scoreboard.getScoreStrings(), size=9)
+            self.obs.split('scoreboard', self.scoreboard.getScoreStrings(self.entrants), size=9)
             yield
 
         print('End of generation results:')
-        for score in self.scoreboard.getScoreStrings():
+        for score in self.scoreboard.getScoreStrings(self.entrants):
             print(score)
-        return
+        self.obs.set('victory', 'Winner: %s' % self.scoreboard.getBest())
+        time.sleep(10)  # Take a moment to pause on the winner screen
+        return None
 
     # Run battle with existing script file and return:
     #  1 for home team win
@@ -102,12 +105,14 @@ class Simulation(object):
         # Generate scenario, needs to be called twice
         subprocess.call('php .\\php_scx\\Compiler.php', shell=True)
         subprocess.call('php .\\php_scx\\Compiler.php', shell=True)
-        time.sleep(5)   # If we don't wait it breaks, maybe AoE2 is reading scenario before it's done compiling
+        time.sleep(6)   # If we don't wait it breaks, maybe AoE2 is reading scenario before it's done compiling
 
         self.obs.set('home-comp', home.getArmyCompStrings())
         self.obs.set('away-comp', away.getArmyCompStrings())
-        self.obs.set('home-display', '%s  %d-%d' % (home.display, home.wins, home.losses))
-        self.obs.set('away-display', '%d-%d  %s' % (away.wins, away.losses, away.display))
+        homeRecord = self.scoreboard.getRecord(home)
+        awayRecord = self.scoreboard.getRecord(away)
+        self.obs.set('home-display', '%s  %d-%d' % (home.display, homeRecord[0], homeRecord[1]))
+        self.obs.set('away-display', '%d-%d  %s' % (awayRecord[0], awayRecord[1], away.display))
 
     def imageIsLine(self, im):
         pixels = [im.getpixel((x, 0)) for x in range(im.width)]

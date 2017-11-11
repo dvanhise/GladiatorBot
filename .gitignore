@@ -3,6 +3,7 @@ home.yaml
 away.yaml
 .idea
 save/
+save.txt
 __pycache__
 Triggers.inc
 php_scx/Scenario.php

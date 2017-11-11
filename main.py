@@ -13,11 +13,13 @@ def main():
     scoreboardData = None
 
     try:
-        with open(SAVE_FILE, 'r') as genFile:
-            data = yaml.load(genFile)
+        with open(SAVE_FILE, 'r') as saveFile:
+            data = yaml.load(saveFile)
+            if not data:
+                raise FileNotFoundError
         gen = data['gen']
         for bot in BOT_DATA[:POP_SIZE]:
-            armies.append(Army(bot, Genome(data['armies'][bot.name])))
+            armies.append(Army(bot, Genome(data['armies'][bot['name']])))
         scoreboardData = data
 
     except FileNotFoundError:
@@ -36,13 +38,11 @@ def main():
         print('Starting generation %d' % gen)
         Obscomm().set('gen', 'Generation %d' % gen)
 
-        while sim.runSim():
+        for a in sim.runSim():
             with open(SAVE_FILE, 'w') as saveFile:
                 saveData = {
                     'gen': gen,
-                    'armies': {
-                        {army.name: army.getGenome() for army in armies}
-                    },
+                    'armies': {army.name: dict(army.getGenome()) for army in armies},
                     **sim.scoreboard.getSaveData()
                 }
                 yaml.dump(saveData, saveFile, default_flow_style=False)
@@ -54,7 +54,7 @@ def main():
             rouletteWheel += [army] * sim.scoreboard.getRecord(army.name)[0]
         record = sim.scoreboard.getRecord(best.name)
         # Save data on winning bot for analysis
-        with open(os.path.join(SAVE_DIR, 'gen%d-winner.txt' % gen)) as winFile:
+        with open(os.path.join(SAVE_DIR, 'gen%d-winner.txt' % gen), 'w') as winFile:
             winFile.write('%s (%s)' % (best.display, best.name))
             winFile.write('Record: %d-%d' % (record[0], record[1]))
             winFile.write('Army Composition:')
@@ -73,7 +73,7 @@ def main():
 def findIn(armies, name):
     for army in armies:
         if army.name == name:
-            return name
+            return army
 
 if __name__ == "__main__":
     main()

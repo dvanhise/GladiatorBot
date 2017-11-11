@@ -1,6 +1,6 @@
 ---
 name: monkbot
-display: Red
+display: Sienna
 like: 'monk, monk, monk'
 dislike: 'siege, archer'
 ---
@@ -10,12 +10,12 @@ like: 'archer, archer'
 dislike: 'infantry, monk'
 ---
 name: gunbot
-display: Blue
+display: Olive
 like: 'gunpowder, gunpowder'
 dislike: 'archer'
 ---
 name: cavalrybot
-display: Orange
+display: Tangerine
 like: 'cavalry, cavalry'
 dislike: 'siege, infantry, archer'
 ---
@@ -30,22 +30,22 @@ like: 'unique'
 dislike: 'tech'
 ---
 name: rangedbot
-display: Black
+display: Seafoam
 like: 'ranged'
 dislike: 'melee'
 ---
 name: meleebot
-display: Yellow
+display: Ochre
 like: 'melee'
 dislike: 'ranged'
 ---
 name: pacifistbot
-display: Seafoam
+display: Viridian
 like: ''
 dislike: 'ranged, melee'
 ---
 name: siegebot
-display: Fuschia
+display: Fuchsia
 like: 'siege, siege'
 dislike: ''
 ---
@@ -70,7 +70,7 @@ like: ''
 dislike: ''
 ---
 name: bot3
-display: White
+display: Rose
 like: ''
 dislike: ''
 ---
@@ -80,12 +80,12 @@ like: ''
 dislike: ''
 ---
 name: bot5
-display: Pink
+display: Crimson
 like: ''
 dislike: ''
 ---
 name: bot6
-display: Purple
+display: Lavender
 like: ''
 dislike: ''
 ---

@@ -7,6 +7,13 @@ from resources import Resources
 from settings import MUT_RATE, CROSSOVER_RATE, WOOD, FOOD, GOLD, UNIT_DATA
 
 
+class ArmyManager(list):
+    def getByName(self, name):
+        for army in self:
+            if army.name == name:
+                return army
+
+
 class Army(object):
 
     def __init__(self, botData=None, genome=None):
@@ -34,6 +41,9 @@ class Army(object):
 
                 self.genome[unitName] = betavariate(alpha=alpha, beta=beta)
         self.comp = self.getUnitComp()
+
+    def __str__(self):
+        return self.name
 
     def makeChild(self, army):
         print('%s mates with %s' % (self.display, army.display))
@@ -112,9 +122,9 @@ class Army(object):
 
     # Returns dictionary of unit->count based on genome and resource limits
     def getUnitComp(self):
-        normGenome = self.genome.power(2.5)   # Higher number here boosts higher valued units even more
+        normGenome = self.genome.power(3)   # Higher number here boosts higher valued units even more
         resources = Resources(WOOD, FOOD, GOLD)
-        armyComp = {}
+        armyComp = {key: 0 for key in UNIT_DATA.keys()}
 
         valueTotal = sum(normGenome.values())
         totalResources = WOOD + FOOD + GOLD
@@ -139,7 +149,7 @@ class Army(object):
         while purchase:
             purchase = False
             # Iterate through units starting from highest value
-            for key, value in sorted(normGenome.iteritems(), key=lambda x: x[1], reverse=True):
+            for key, value in sorted(normGenome.items(), key=lambda x: x[1], reverse=True):
                 unit = UNIT_DATA[key]
                 # If unit can be afforded and isn't an already purchased tech
                 if resources.canAfford(unit, 1) and not ('tech' in unit['type'] and armyComp[key] >= 1):
