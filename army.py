@@ -46,8 +46,73 @@ class Army(object):
         return Army({'name': self.name, 'display': self.display}, genome=tempGenome)
 
     # Returns dictionary of unit->count from army genome
+    # def getUnitComp(self):
+    #     normGenome = self.genome.power(3)   # Higher number here boosts higher valued units even more
+    #     resources = Resources(WOOD, FOOD, GOLD)
+    #     armyComp = {}
+    #
+    #     valueTotal = sum(normGenome.values())
+    #     totalResources = WOOD + FOOD + GOLD
+    #
+    #     testResources = Resources(0, 0, 0)
+    #     # Iterate through units to find relative demand for each resource
+    #     for key, value in normGenome.items():
+    #         unit = UNIT_DATA[key]
+    #         totalUnitCost = unit['wood'] + unit['food'] + unit['gold']
+    #         fairRatio = value/valueTotal
+    #
+    #         # How many of unit should I buy if all resources were combined and identical?
+    #         fairUnitBuy = fairRatio * totalResources/totalUnitCost
+    #
+    #         testResources.unpurchase(unit, fairUnitBuy)
+    #
+    #     woodDemand = testResources.wood/WOOD
+    #     foodDemand = testResources.food/FOOD
+    #     goldDemand = testResources.gold/GOLD
+    #
+    #     remainderTab = {}
+    #     # Based off relative resource demand and fair ratio, purchase units
+    #     for key, value in normGenome.items():
+    #         fairRatio = value/valueTotal
+    #         unit = UNIT_DATA[key]
+    #         totalRelativeUnitCost = unit['wood']*woodDemand + unit['food']*foodDemand + unit['gold']*goldDemand
+    #         allowance = []
+    #         if unit['wood']:
+    #             woodAllowance = WOOD * fairRatio/(woodDemand * unit['wood'])
+    #             allowance.append(woodAllowance)
+    #         if unit['food']:
+    #             foodAllowance = FOOD * fairRatio/(foodDemand * unit['food'])
+    #             allowance.append(foodAllowance)
+    #         if unit['gold']:
+    #             goldAllowance = GOLD * fairRatio/(goldDemand * unit['gold'])
+    #             allowance.append(goldAllowance)
+    #
+    #         count = min(allowance)
+    #
+    #         # Only one of a technology can be had
+    #         if 'tech' in unit['type']:
+    #             count = min(1, count)
+    #
+    #         resources.purchase(unit, int(count))
+    #         armyComp[key] = int(count)
+    #         #
+    #         remainderTab[key] = value - int(count)*totalRelativeUnitCost*valueTotal/totalResources
+    #
+    #     # Go through remainderTab sorted by highest value and build one of each unit if it can be afforded.
+    #     #   This is to fairly use up remaining resources
+    #     sortedRemainder = sorted(remainderTab.items(), key=lambda x: x[1], reverse=True)
+    #     for key, value in sortedRemainder:
+    #         unit = UNIT_DATA[key]
+    #         if resources.canAfford(unit, 1) and not ('tech' in unit['type'] and armyComp[key] >= 1):
+    #             resources.purchase(unit, 1)
+    #             armyComp[key] += 1
+    #
+    #     print(self.display + ' resources remaining: ' + str(resources))
+    #     return armyComp
+
+    # Returns dictionary of unit->count based on genome and resource limits
     def getUnitComp(self):
-        normGenome = self.genome.power(3)   # Higher number here boosts higher valued units even more
+        normGenome = self.genome.power(2.5)   # Higher number here boosts higher valued units even more
         resources = Resources(WOOD, FOOD, GOLD)
         armyComp = {}
 
@@ -70,42 +135,21 @@ class Army(object):
         foodDemand = testResources.food/FOOD
         goldDemand = testResources.gold/GOLD
 
-        remainderTab = {}
-        # Based off relative resource demand and fair ratio, purchase units
-        for key, value in normGenome.items():
-            fairRatio = value/valueTotal
-            unit = UNIT_DATA[key]
-            mod = 1.6   # This helps but might cause invalid unit purchases
-            allowance = []
-            if unit['wood']:
-                woodAllowance = WOOD * fairRatio * mod/(woodDemand * unit['wood'])
-                allowance.append(woodAllowance)
-            if unit['food']:
-                foodAllowance = FOOD * fairRatio * mod/(foodDemand * unit['food'])
-                allowance.append(foodAllowance)
-            if unit['gold']:
-                goldAllowance = GOLD * fairRatio * mod/(goldDemand * unit['gold'])
-                allowance.append(goldAllowance)
-
-            count = min(allowance)
-            avg = sum(allowance)/len(allowance)
-
-            # Only one of a technology can be had
-            if 'tech' in unit['type']:
-                count = min(1, count)
-
-            resources.purchase(unit, int(count))
-            armyComp[key] = int(count)
-            remainderTab[key] = avg - int(count)
-
-        # Go through remainderTab sorted by highest value and build one of each unit if it can be afforded.
-        #   This is to fairly use up remaining resources
-        sortedRemainder = sorted(remainderTab.items(), key=lambda x: x[1], reverse=True)
-        for key, value in sortedRemainder:
-            unit = UNIT_DATA[key]
-            if resources.canAfford(unit, 1) and not ('tech' in unit['type'] and armyComp[key] >= 1):
-                resources.purchase(unit, 1)
-                armyComp[key] += 1
+        purchase = True
+        while purchase:
+            purchase = False
+            # Iterate through units starting from highest value
+            for key, value in sorted(normGenome.iteritems(), key=lambda x: x[1], reverse=True):
+                unit = UNIT_DATA[key]
+                # If unit can be afforded and isn't an already purchased tech
+                if resources.canAfford(unit, 1) and not ('tech' in unit['type'] and armyComp[key] >= 1):
+                    resources.purchase(unit, 1)
+                    armyComp[key] += 1
+                    totalRelativeUnitCost = unit['wood']*woodDemand + unit['food']*foodDemand + unit['gold']*goldDemand
+                    normGenome[key] -= totalRelativeUnitCost*valueTotal/totalResources
+                    purchase = True
+                    # Re-sort gene values and start again once a unit had been purchased
+                    break
 
         print(self.display + ' resources remaining: ' + str(resources))
         return armyComp
